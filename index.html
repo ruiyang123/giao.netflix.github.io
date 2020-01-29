@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
   <meta charset="utf-8">
   <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -8,8 +9,12 @@
 </head>
 
 <body>
+
+
+
+
   <script>
-var margin = {top:20, right:30,bottom:30,left:40},
+var margin = {top:100, right:30,bottom:30,left:40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -25,7 +30,7 @@ var x = d3.scaleBand()
 var z = d3.scaleOrdinal(d3.schemeCategory20)
 
 var parseTime = d3.timeParse("%Y")
-  d3.json('C://giao.netflix.github.io//data2.json', function(error, raw) {		
+  d3.json('https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data2.json', function(error, raw) {		
     var symbols = []
     
     for (var key in raw[0]){
@@ -150,6 +155,15 @@ var parseTime = d3.timeParse("%Y")
     .style("text-anchor","middle")
     .attr("font-size","12px")
     .attr("font-weight","bold");
+
+    svg.append("text")
+    .attr("x",480)
+    .attr("y",20)
+    .attr("dy","2em")
+    .style("text-anchor","middle")
+    .attr("font-size","25px")
+    .attr("font-weight","bold")
+    .text("Rating and Quantity in different year")
     
     
     
@@ -157,4 +171,17 @@ var parseTime = d3.timeParse("%Y")
   })
 
   </script>
+
+<div id="menu" style="background-color:#FFD700;height:200px;width:200px;float:right;">
+<b>Guide Bar</b>
+<br/>
+<a href="index.html"> Rating and Quantity</a>
+<br/>
+<a href="group_bar.html">Movies and Tv quantity</a>
+
+</div>
+
 </body>
+
+
+</html>
