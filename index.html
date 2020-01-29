@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <style>
+    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+  </style>
+</head>
+
+<body>
+  <script>
+var margin = {top:20, right:30,bottom:30,left:40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var y = d3.scaleLinear()
+					.rangeRound([height,0])
+.nice();
+    
+var x = d3.scaleBand()
+					.rangeRound([0,width])
+.paddingInner(0.05)
+.align(0.1)
+
+var z = d3.scaleOrdinal(d3.schemeCategory20)
+
+var parseTime = d3.timeParse("%Y")
+  d3.json('C://giao.netflix.github.io//data2.json', function(error, raw) {		
+    var symbols = []
+    
+    for (var key in raw[0]){
+      if (key!="year"){
+        symbols.push(key)
+        
+      }
+    }
+    
+  //console.log(symbols)
+    
+    var years = raw.map(function(d){return d.year;})
+
+    
+    var layers = d3.stack().keys(symbols)(raw)
+    
+    var max = d3.max(layers[layers.length - 1],function(d){return d[1];});
+    
+    y.domain([0,max]);
+    x.domain(years);
+    
+    var svg = d3.select("body").append("svg")
+    						.attr("width",width + margin.left + margin.right)
+    						.attr("height", height + margin.top + margin.bottom)
+    						.append("g")
+    						.attr("transform", "translate("+ margin.left +","+ margin.top +")");
+    //console.log(layers[2].key)
+    svg.append("g").selectAll("g")
+    		.data(layers)
+    .enter().append("g")
+    .style("fill",function(d){return z(d.key);})
+    .attr("class",function(d){return d.key})
+    .attr("id","stack")
+    .on("mouseover",function(d){
+      
+      svg.selectAll("#stack").filter(function(e){
+      
+     // console.log(e.key)
+      //console.log(d.key)
+      return e.key!==d.key;
+    }).style("opacity",.3);
+      
+      svg.selectAll("#leg").filter(function(e){
+        console.log(e)
+        console.log(z(d.key))
+        return e!==z(d.key)
+      }).style("opacity",.3)
+                               
+       })
+    .on("mouseout",function(d){
+      svg.selectAll("#stack").style("opacity",1);
+      svg.selectAll("#leg").style("opacity",1);
+                              
+                              })
+    //.on("mouseover",function(d){ svg.selectAll("."+d.key).style("opacity",1)})
+    
+    .selectAll("rect")
+    .data(function(d){return d;})
+    .enter().append("rect")
+    .attr("x",function(d,i){return x(d.data.year)})
+    .attr("y", function(d){return y(d[1])})
+    .attr("height",function(d){return y(d[0])-y(d[1])})
+    .attr("width",x.bandwidth())
+    .on("mouseover",function(){tooltip.style("display",null);})
+    .on("mouseout",function(){tooltip.style("display","none");})
+    .on("mousemove",function(d){
+      var xPosition = d3.mouse(this)[0]-15;
+      var yPosition = d3.mouse(this)[1] - 25;
+      tooltip.attr("transform","translate("+ xPosition +", "+ yPosition +")");
+      tooltip.select("text").text(d[1]-d[0])
+    })
+    
+    ;
+    
+    var colors = symbols.map(function(d){return z(d)});
+    //console.log(colors)
+    
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x))
+    
+    svg.append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(" + (0) + ", 0)")
+      .call(d3.axisLeft().scale(y))
+  // console.log(layers)
+    
+    var legend = svg.selectAll(".legend")
+    .data(colors)
+    .enter().append("g")
+    .attr("class","legend")
+    .attr("transform",function(d,i){return "translate(30, "+ i*19 +")"})
+    
+    legend.append("rect")
+    .attr("id","leg")
+    .attr("x",18)
+    .attr("width",18)
+    .attr("height",18)
+    .style("fill",function(d,i){return z(symbols[i]);})
+    
+    legend.append("text")
+    .attr("x",36)
+    .attr("y",9)
+    .attr("dy",".35em")
+    .style("text-anchor",'start')
+    .text(function(d,i){ return symbols[i]})
+    
+    var tooltip = svg.append("g")
+    .attr("class","tooltip")
+    .style("display","none");
+    
+    tooltip.append("rect")
+    .attr("width",30)
+    .attr("height",20)
+    .attr("fill","white")
+    .style("opacity",.5);
+    
+    tooltip.append("text")
+    .attr("x",15)
+    .attr("dy","1.2em")
+    .style("text-anchor","middle")
+    .attr("font-size","12px")
+    .attr("font-weight","bold");
+    
+    
+    
+    
+  })
+
+  </script>
+</body>
