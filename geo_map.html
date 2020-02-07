@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/topojson.v2.min.js"></script>
+  <script src="https://d3js.org/d3-array.v1.min.js"></script>
+<script src="https://d3js.org/d3-geo.v1.min.js"></script>
+<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.js"></script>
+  
+  <style>
+    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+  </style>
+</head>
+
+<body>
+  <script>
+  var margin = {top: 20, right: 30, bottom: 30, left: 40},
+      width = 960 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
+      var xScale = d3.scaleLinear()
+        .domain([-width / 2, width / 2])
+        .range([0, width]);
+   
+    
+   	var a = d3.rgb(255,255,255);
+    var b = d3.rgb(200,0,0);
+    var compute = d3.interpolate(a,b);
+    var linear = d3.scaleLinear().domain([0,2000]).range([0,1]);
+    
+    
+   var view = null,
+   currentTransform = null;
+    var yScale = d3.scaleLinear()
+        .domain([-height / 2, height / 2])
+        .range([height, 0]);
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+   var svg = d3.select("body")
+   .append("svg")
+   .attr("width",width)
+   .attr("height",height);
+    view = svg.append("g")
+        .attr("class", "view");
+    if (currentTransform) view.attr('transform', currentTransform);
+
+   
+ 
+    
+   
+    var projection = d3.geoEqualEarth().rotate([-10, 0]);
+
+    var path = d3.geoPath() // d3.geo.path avec d3 version 3
+                 .projection(projection);
+    d3.json("data_country.json",function(data){
+      
+      
+    d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json",function(error,world){
+      
+     // console.log(world.objects.countries.geometries)   
+      
+     //console.log(world.objects.countries.geometries);
+      
+      for ( var i in world.objects.countries.geometries){
+        
+        //console.log(world.objects.countries.geometries[i].properties);
+        
+        world.objects.countries.geometries[i].properties["nomb"] = -1;
+       // console.log(world.objects.countries.geometries[i].properties)
+      };
+      
+      for (var i=0;i<data.length;i++){
+        var country = data[i].country;
+        var tol_nom = data[i].value;
+        
+        for (var j in world.objects.countries.geometries){
+          
+          if( world.objects.countries.geometries[j].properties.name== country){
+            world.objects.countries.geometries[j].properties["nomb"] = tol_nom
+            
+            
+          }
+        }
+        
+      }
+      
+      
+	    svg.selectAll("path")
+           .data(topojson.feature(world, world.objects.countries).features)
+           .enter()
+           .append("path")
+           .attr("d", path)
+      				.attr("class","carte")
+      				.attr("fill",function(d,i){
+        //console.log(d.properties.nomb)
+        //console.log(d.properties.name)
+        if(d.properties.nomb == -1){return d3.rgb(120,120,120)}
+        else{return compute(linear(d.properties.nomb))}
+      })
+    .on("mouseover",function(){tooltip.style("display",null);})
+    .on("mouseout",function(){tooltip.style("display","none");})
+    .on("mousemove",function(d){
+        console.log(d3.mouse(this))
+          var xPosition = d3.mouse(this)[0];
+        	var  yPosition = d3.mouse(this)[1];
+        tooltip.attr("transform","translate("+ xPosition +","+ yPosition +")");
+        tooltip.select("text").text(
+        function(){
+          if (d.properties.nomb == -1) {
+            return d.properties.name + ":" + 0
+            
+          }
+          else{return d.properties.name + ":" + d.properties.nomb}
+        }
+        )
+          
+          
+    				 })
+      
+      
+      
+        var tooltip = svg.append("g")
+    .attr("class","tooltip")
+    .style("display","none");
+    
+    tooltip.append("rect")
+    .attr("width",100)
+    .attr("height",20)
+    .attr("fill","white")
+    .style("opacity",0.5)
+    .style("rect-anchor","middle");
+    
+    tooltip.append("text")
+    .attr("x",15)
+    .attr("dy","1.2em")
+    .style("text-anchor","right")
+    .attr("font-size","12px")
+    .attr("font-weight","bold");
+      
+      
+    });
+    
+    
+    })
+    
+    
+    
+    
+    
+    
+    // zoom and pan
+   var zoom = d3.zoom()
+    .scaleExtent([0.5, 5])
+    .translateExtent([
+        [-width * 2, -height * 2],
+        [width * 2, height * 2]
+    ])
+    .on("zoom", zoomed);
+      
+   function zoomed() {
+    currentTransform = d3.event.transform;
+     console.log(currentTransform)
+    svg.selectAll(".carte").attr("transform", currentTransform);
+     //svg.selectAll(".tooltip").attr("transform", currentTransform);
+}
+  svg.call(zoom);
+    
+    
+
+
+
+  </script>
+  <div id="menu" style="background-color:#FFD700;height:200px;width:200px;float:right;">
+<b>Guide Bar</b>
+<br/>
+<a href="index.html"> Rating and Quantity</a>
+<br/>
+<a href="group_bar.html">Movies and Tv quantity</a>
+<br/>
+<a href="geo_map.html">Geo Map Netflix</a>
+</div>
+</body>
