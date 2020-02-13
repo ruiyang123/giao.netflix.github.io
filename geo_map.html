@@ -74,7 +74,7 @@
     var path = d3.geoPath() // d3.geo.path avec d3 version 3
                  .projection(projection);
     d3.json("https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_country.json",function(data){
-      
+      d3.json("data_diff_country.json",function(data2){
       
     d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json",function(error,world){
       
@@ -105,6 +105,29 @@
         
       }
       
+                  for ( var i in world.objects.countries.geometries){
+        
+        //console.log(world.objects.countries.geometries[i].properties);
+        
+        world.objects.countries.geometries[i].properties["genre_value"] = {"country" :"None", value_type: 0};
+       // console.log(world.objects.countries.geometries[i].properties)
+      };
+      
+      for (var i=0;i<data2.length;i++){
+        var country = data2[i].country;
+        var tol_nom = data2[i].value_type;
+        
+        for (var j in world.objects.countries.geometries){
+          
+          if( world.objects.countries.geometries[j].properties.name== country){
+            world.objects.countries.geometries[j].properties["genre_value"] = tol_nom
+            
+            
+          }
+        }
+        
+      }
+    //  console.log(world.objects.countries.geometries)
       
 	    svg.selectAll("path")
            .data(topojson.feature(world, world.objects.countries).features)
@@ -118,10 +141,17 @@
         if(d.properties.nomb == -1){return d3.rgb(120,120,120)}
         else{return compute(linear(d.properties.nomb))}
       })
+    .on("click",function(d){
+        console.log(d.properties)
+        drawCountry(d.properties.genre_value)
+        
+        
+        
+      })
     .on("mouseover",function(){tooltip.style("display",null);})
     .on("mouseout",function(){tooltip.style("display","none");})
     .on("mousemove",function(d){
-        console.log(d3.mouse(this))
+       // console.log(d3.mouse(this))
           var xPosition = d3.mouse(this)[0];
         	var  yPosition = d3.mouse(this)[1];
         tooltip.attr("transform","translate("+ xPosition +","+ yPosition +")");
@@ -158,16 +188,12 @@
     .attr("font-size","12px")
     .attr("font-weight","bold");
       
-      
+    })
     });
     
     
     })
-    
-    
-    
-    
-    
+     
     
     // zoom and pan
    var zoom = d3.zoom()
@@ -180,13 +206,20 @@
       
    function zoomed() {
     currentTransform = d3.event.transform;
-     console.log(currentTransform)
+     //console.log(currentTransform)
     svg.selectAll(".carte").attr("transform", currentTransform);
      //svg.selectAll(".tooltip").attr("transform", currentTransform);
 }
   svg.call(zoom);
     
-    
+    function drawCountry(data){
+      
+  d3.json('https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data2.json',function(data2){
+      
+      console.log(data)
+      if (data.country=="None"){
+        data = data2
+      }
 
 var margin = {top:50, right:15,bottom:30,left:40},
     width = 580 - margin.left - margin.right,
@@ -204,10 +237,11 @@ var x = d3.scaleBand()
 var z = d3.scaleOrdinal(d3.schemeCategory20)
 
 var parseTime = d3.timeParse("%Y")
-  d3.json('https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data2.json', function(error, raw) {   
+
+ 
     var symbols = []
     
-    for (var key in raw[0]){
+    for (var key in data[0]){
       if (key!="year"){
         symbols.push(key)
         
@@ -216,19 +250,21 @@ var parseTime = d3.timeParse("%Y")
     
   //console.log(symbols)
     
-    var years = raw.map(function(d){return d.year;})
+    var years = data.map(function(d){return d.year;})
 
     
-    var layers = d3.stack().keys(symbols)(raw)
+    var layers = d3.stack().keys(symbols)(data)
     
     var max = d3.max(layers[layers.length - 1],function(d){return d[1];});
     
     y.domain([0,max]);
     x.domain(years);
+    d3.selectAll("#countryPlot").remove();
     
     var svg = d3.select("body").append("svg")
                 .attr("width",width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
+    									.attr("id","countryPlot")
                 .append("g")
                 .attr("transform", "translate("+ margin.left +","+ margin.top +")")
                 ;
@@ -249,8 +285,8 @@ var parseTime = d3.timeParse("%Y")
     }).style("opacity",.3);
       
       svg.selectAll("#leg").filter(function(e){
-        console.log(e)
-        console.log(z(d.key))
+       // console.log(e)
+        //console.log(z(d.key))
         return e!==z(d.key)
       }).style("opacity",.3)
                                
@@ -344,7 +380,12 @@ var parseTime = d3.timeParse("%Y")
     
     
     
-  })
+ })}
+ 
+    data = {"country":"None"}
+ drawCountry(data)  
+    
+
 
   </script>
   <div id="menu" style="background-color:#FFD700;height:200px;width:200px;float:right;">
