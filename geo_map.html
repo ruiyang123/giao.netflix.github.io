@@ -25,6 +25,16 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #b30000; 
 }
+
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
+
 </style>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
@@ -382,11 +392,108 @@ var parseTime = d3.timeParse("%Y")
     
     
  }
+
+function drawPieChar(data){
+    d3.json("https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/diff_type.json",function(data2){
+        data = data2
+
+        var margin = {top:50, right:15,bottom:30,left:40},
+        width = 400 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+        var svg = d3.select("body").append("svg")
+            .attr("width",width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .attr("transform","translate("+ 100 +","+ 100 +")")
+                  .attr("id","countryPlot")
+         var el = svg.append("g")
+            .attr("transform", "translate("+ width/2 +","+ height/2 +")")
+
+         var radius = Math.min(width, height) / 2
+         var color = d3.scaleOrdinal(d3.schemeCategory20)
+var pie = d3.pie()
+    .sort(null)
+    .value(function(d) { return d.value; });
+
+var path = d3.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(0);
+
+var label = d3.arc()
+    .outerRadius(radius - 40)
+    .innerRadius(radius - 40);
+
+
+function angle(d) {
+  var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+  return a > 90 ? a - 180 : a;
+}
+
+  var arc = el.selectAll(".arc")
+    .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+ arc.append("path")
+      .attr("d", path)
+      .attr("id","piechart")
+      .attr("fill", function(d) { return color(d.data.name); })
+      .style("opacity",0.8)
+      .on("mouseover",function(d){
+    tooltip.style("display",null);
+    svg.selectAll("#piechart").filter(function(e){
+      console.log(e)
+      return e.data.name !== d.data.name
+      
+    }).style("opacity",0.2)
+  })
+  .on("mouseout",function(d){
+    tooltip.style("display","none")
+    svg.selectAll("#piechart").style("opacity",1)
+    svg.selectAll("#pietext").style("opacity",1)
+  })
+    .on("mousemove",function(d){
+      var xPosition = d3.mouse(this)[0];
+      var yPosition = d3.mouse(this)[1];
+      tooltip.attr("transform","translate("+label.centroid(d) +")");
+      tooltip.select("text").text(d.data.name+":"+d.data.value)
+      svg.selectAll("#pietext").style("opacity",0)
+    });
+     arc.append("text")
+      .attr("id","pietext")
+      .attr("transform", function(d,i) { 
+    
+    return "translate(" + label.centroid(d) + ") rotate("+angle(d)+ ")"; })
+      .attr("dy", "0.2em")
+      .text(function(d) { return d.data.name; });
+  
+  
+  
+  var tooltip = arc.append("g")
+    .attr("class","tooltip")
+    .style("display","none");
+    
+    
+    tooltip.append("text")
+    .attr("x",15)
+    .attr("dy","1.2em")
+    .style("text-anchor","middle")
+    .attr("font-size","12px")
+    .attr("font-weight","bold");
+
+    })
+}
+
+
     var data = {"country":"None"};
     drawCountry(data);
+    drawPieChar(data);
   
     
     
+
+
+
 
 
   </script>
@@ -399,5 +506,8 @@ var parseTime = d3.timeParse("%Y")
 <br/>
 <a href="geo_map.html">Geo Map Netflix</a>
 </div>
+
+
+
 </body>
 
