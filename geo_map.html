@@ -45,7 +45,7 @@
         .range([0, width]);
    
     
-   	var a = d3.rgb(255,255,255);
+    var a = d3.rgb(255,255,255);
     var b = d3.rgb(200,0,0);
     var compute = d3.interpolate(a,b);
     var linear = d3.scaleLinear().domain([0,2000]).range([0,1]);
@@ -96,7 +96,7 @@
         
         for (var j in world.objects.countries.geometries){
           
-          if( world.objects.countries.geometries[j].properties.name== country){
+          if( world.objects.countries.geometries[j].properties.name == country){
             world.objects.countries.geometries[j].properties["nomb"] = tol_nom
             
             
@@ -129,13 +129,13 @@
       }
     //  console.log(world.objects.countries.geometries)
       
-	    svg.selectAll("path")
+      svg.selectAll("path")
            .data(topojson.feature(world, world.objects.countries).features)
            .enter()
            .append("path")
            .attr("d", path)
-      				.attr("class","carte")
-      				.attr("fill",function(d,i){
+              .attr("class","carte")
+              .attr("fill",function(d,i){
         //console.log(d.properties.nomb)
         //console.log(d.properties.name)
         if(d.properties.nomb == -1){return d3.rgb(120,120,120)}
@@ -153,7 +153,7 @@
     .on("mousemove",function(d){
        // console.log(d3.mouse(this))
           var xPosition = d3.mouse(this)[0];
-        	var  yPosition = d3.mouse(this)[1];
+          var  yPosition = d3.mouse(this)[1];
         tooltip.attr("transform","translate("+ xPosition +","+ yPosition +")");
         tooltip.select("text").text(
         function(){
@@ -166,7 +166,7 @@
         )
           
           
-    				 })
+             })
       
       
       
@@ -214,12 +214,13 @@
     
     function drawCountry(data){
       
-  d3.json('https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data2.json',function(data2){
+ d3.json('https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data2.json',function(data2){
       
       console.log(data)
       if (data.country=="None"){
         data = data2
       }
+      console.log(data)
 
 var margin = {top:50, right:15,bottom:30,left:40},
     width = 580 - margin.left - margin.right,
@@ -264,7 +265,7 @@ var parseTime = d3.timeParse("%Y")
     var svg = d3.select("body").append("svg")
                 .attr("width",width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
-    									.attr("id","countryPlot")
+                      .attr("id","countryPlot")
                 .append("g")
                 .attr("transform", "translate("+ margin.left +","+ margin.top +")")
                 ;
@@ -377,13 +378,12 @@ var parseTime = d3.timeParse("%Y")
     .attr("font-weight","bold")
     .text("Rating and Quantity in different year")
     
+ })
     
     
+ }
+  
     
- })}
- 
-    data = {"country":"None"}
- drawCountry(data)  
     
 
 
@@ -398,3 +398,4 @@ var parseTime = d3.timeParse("%Y")
 <a href="geo_map.html">Geo Map Netflix</a>
 </div>
 </body>
+
