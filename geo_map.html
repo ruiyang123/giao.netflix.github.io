@@ -59,7 +59,7 @@
     var b = d3.rgb(200,0,0);
     var compute = d3.interpolate(a,b);
     var linear = d3.scaleLinear().domain([0,2000]).range([0,1]);
-    
+    var linear2 = d3.scaleLinear().domain([0,200]).range([0,1]);
     
    var view = null,
    currentTransform = null;
@@ -85,6 +85,7 @@
                  .projection(projection);
     d3.json("https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_country.json",function(data){
       d3.json("https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_diff_country.json",function(data2){
+ d3.json("https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_diff_country_type.json",function(data3){       
       
     d3.json("https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/countries-50m.json",function(error,world){
       
@@ -120,30 +121,49 @@
         //console.log(world.objects.countries.geometries[i].properties);
         
         world.objects.countries.geometries[i].properties["genre_value"] = {"country" :"None", value_type: 0};
+        world.objects.countries.geometries[i].properties["type_value"] = {"country" :"None", value: 0};
        // console.log(world.objects.countries.geometries[i].properties)
       };
       
       for (var i=0;i<data2.length;i++){
         var country = data2[i].country;
-        var tol_nom = data2[i].value_type;
+        var vt = data2[i].value_type;
+        
         
         for (var j in world.objects.countries.geometries){
           
           if( world.objects.countries.geometries[j].properties.name== country){
-            world.objects.countries.geometries[j].properties["genre_value"] = tol_nom
+            world.objects.countries.geometries[j].properties["genre_value"] = vt
             
             
           }
         }
         
       }
-    //  console.log(world.objects.countries.geometries)
+      for (var i=0;i<data3.length;i++){
+       // console.log(data3)
+        var country = data3[i].country;
+        var gt = data3[i].value;
+        
+        
+        for (var j in world.objects.countries.geometries){
+          
+          if( world.objects.countries.geometries[j].properties.name== country){
+            world.objects.countries.geometries[j].properties["type_value"] = gt
+            
+            
+          }
+        }
+        
+      }
+     // console.log(world.objects.countries.geometries)
       
       svg.selectAll("path")
            .data(topojson.feature(world, world.objects.countries).features)
            .enter()
            .append("path")
            .attr("d", path)
+           .attr("id","countryplot")
               .attr("class","carte")
               .attr("fill",function(d,i){
         //console.log(d.properties.nomb)
@@ -152,8 +172,10 @@
         else{return compute(linear(d.properties.nomb))}
       })
     .on("click",function(d){
-        console.log(d.properties)
+     //  console.log(d.properties)
         drawCountry(d.properties.genre_value)
+        //console.log(d.properties.type_value)
+        drawPieChart(d.properties.type_value)
         
         
         
@@ -199,7 +221,8 @@
     .attr("font-weight","bold");
       
     })
-    });
+    })
+      });
     
     
     })
@@ -230,7 +253,7 @@
       if (data.country=="None"){
         data = data2
       }
-      console.log(data)
+    //  console.log(data)
 
 var margin = {top:50, right:15,bottom:30,left:40},
     width = 580 - margin.left - margin.right,
@@ -393,10 +416,11 @@ var parseTime = d3.timeParse("%Y")
     
  }
 
-function drawPieChar(data){
+var linear2 = d3.scaleLinear().domain([0,100]).range([0,1]);
+function drawPieChart(data){
     d3.json("https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/diff_type.json",function(data2){
-        data = data2
-
+        if(data.country=="None"){data = data2}
+        
         var margin = {top:50, right:15,bottom:30,left:40},
         width = 400 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
@@ -439,14 +463,55 @@ function angle(d) {
       .attr("id","piechart")
       .attr("fill", function(d) { return color(d.data.name); })
       .style("opacity",0.8)
+       .on("click",function(d){
+  // console.log(d.data.name)
+   d3.selectAll(".carte")
+   .attr("fill",function(e){ 
+ //    console.log(e)
+            if(e.properties.nomb == -1){return d3.rgb(120,120,120)}
+        else{return compute(linear2(e.properties.nomb))}
+                           })
+ 
+ })
+        .on("click",function(d){
+   
+  // console.log(d.data.name)
+   d3.selectAll("#countryplot")
+   .attr("fill",function(e){ 
+     if(e.properties.type_value.country !== "None"){
+     var val2 =-1
+      //console.log(e.properties.type_value)
+       e.properties.type_value.forEach(function(nm){
+       //console.log(nm.value)
+        //console.log(nm.name,d.data.name)
+         if(nm.name == d.data.name)
+           { console.log(nm.value)
+              val2 = nm.value}
+         else{return d3.rgb(255,120,120)}
+       })
+
+       console.log(val2)
+       if (val2!==-1)
+
+
+       {return compute(linear2(val2));}
+       
+     }
+     else{return d3.rgb(255,120,120)}
+           // if(e.properties.type_value.country == "None"){return d3.rgb(120,120,120)}
+        //else{return compute(linear(e.properties.type_value[d.data.name].value))}
+                           })
+ 
+ })
       .on("mouseover",function(d){
     tooltip.style("display",null);
     svg.selectAll("#piechart").filter(function(e){
-      console.log(e)
+    //  console.log(e)
       return e.data.name !== d.data.name
       
     }).style("opacity",0.2)
   })
+
   .on("mouseout",function(d){
     tooltip.style("display","none")
     svg.selectAll("#piechart").style("opacity",1)
@@ -487,7 +552,7 @@ function angle(d) {
 
     var data = {"country":"None"};
     drawCountry(data);
-    drawPieChar(data);
+    drawPieChart(data);
   
     
     
