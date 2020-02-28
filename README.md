@@ -35,7 +35,7 @@ This graph shows the distribution of the number TV shows and Movies in diffrent 
 And there exist an interaction with the GeoMap that means you can move your mouse to a category and click it to add a filter to the **GeoMap**
 <br/>
 
-<br/>
+
 ![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/stacked_bar.PNG)
 
 ### 3.3 Radio Pie Chart
@@ -44,7 +44,7 @@ This graph shows the proportion of different types(children, horrible,internatio
 And there exist an interaction with the GeoMap that means you can move your mouse to a category and click it to add a filter to the 
 <br/>
 
-<br/>
+
 ![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/radio_pie.PNG)
 
 ### 3.4 Bar Chart
@@ -52,7 +52,7 @@ And there exist an interaction with the GeoMap that means you can move your mous
 This graph shows the number of Movies according to their periods in minutes.
 <br/>
 
-<br/>
+
 ![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/bar.PNG)
 
 ### 3.5 Line Chart
@@ -60,7 +60,7 @@ This graph shows the number of Movies according to their periods in minutes.
 This graph shows the number of movies and TV shows added to Netflix each year since 2008, as you can see the graph is made up of two curves, one for Movies and the other for TV shows, you can show or hide the curve by clicking on the corresponding label at the top of the page.
 <br/>
 
-<br/>
+
 ![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/line.PNG)
 
 
