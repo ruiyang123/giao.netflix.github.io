@@ -4,6 +4,31 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <title>Netlfix Data Visulization</title>
+    <meta
+      name="description"
+      content="Ce site permet de visualiser un jeu de données qui se compose des films et séries qui sont disponible sur la plateforme Netflix depuis 2008. Les données sont collectées depuis Flixable qui est un moteur de recherche pour Netflix."
+    />
+    <meta
+      name="author"
+      content="RUI Yang - EL MORABET Hicham - ELMAGHRAOUI Imran"
+    />
+    <meta property="og:title" content="Netlfix Data Visulization" />
+    <meta
+      property="og:description"
+      content="Ce site permet de visualiser un jeu de données qui se compose des films et séries qui sont disponible sur la plateforme Netflix depuis 2008. Les données sont collectées depuis Flixable qui est un moteur de recherche pour Netflix."
+    />
+    <meta
+      property="og:image"
+      content="https://cdn.vox-cdn.com/thumbor/Yq1Vd39jCBGpTUKHUhEx5FfxvmM=/39x0:3111x2048/1200x800/filters:focal(39x0:3111x2048)/cdn.vox-cdn.com/uploads/chorus_image/image/49901753/netflixlogo.0.0.png"
+    />
+
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="https://cdn.vox-cdn.com/thumbor/Yq1Vd39jCBGpTUKHUhEx5FfxvmM=/39x0:3111x2048/1200x800/filters:focal(39x0:3111x2048)/cdn.vox-cdn.com/uploads/chorus_image/image/49901753/netflixlogo.0.0.png"
+    />
+
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -18,6 +43,10 @@
     <script src="https://d3js.org/d3-geo.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3-scale-radial.js"></script>
   </head>
 
   <body>
@@ -26,75 +55,212 @@
         class="navbar navbar-expand-lg navbar-light bg-light bg-gradinent sticky-top"
       >
         <a class="navbar-brand text-white title-margin logo" href="#"
-          >Netflix Analysis</a
+          >Netlfix Data Visulization</a
         >
       </nav>
       <div>
+        <!-- ........ -->
+
+        <!-- ........... -->
         <div class="container-fluid ">
-          <div class="row1">
+          <div class="row">
             <main class="main-content col-lg-12 col-md-12 col-sm-12 ">
               <div class="h-100">
                 <div
-                  class="my-chart col-xs-8 col-md-8 col-ms-8 col-lg-8 border card m-2 ml-5 mt-3"
-                  id="map"
-                ></div>
-
+                  class="top-card col-xs-9 col-md-9 col-ms-9 col-lg-9 border m-2 ml-5"
+                >
+                  <div class="row">
+                    <main class="main-content col-lg-12 col-md-12 col-sm-12 ">
+                      <div class="h-100">
+                        <div
+                          id="map"
+                          class="my-chart col-xs-11 col-md-11 col-ms-11 col-lg-11 border card m-2 ml-5"
+                        >
+                          <span id="t1"></span>
+                          <!-- Map Container -->
+                        </div>
+                      </div>
+                    </main>
+                  </div>
+                  <div class="row">
+                    <main class="main-content col-lg-12 col-md-12 col-sm-12 ">
+                      <div class="h-100">
+                        <div
+                          class="my-chart col-xs-11 col-md-11 col-ms-11 col-lg-11 border card m-2 ml-5"
+                          id="bars"
+                        >
+                          <span id="t2"></span>
+                        </div>
+                      </div>
+                    </main>
+                  </div>
+                  <div class="row">
+                    <main class="main-content col-lg-12 col-md-12 col-sm-12 ">
+                      <div class="h-100">
+                        <div
+                          class="my-chart col-xs-11 col-md-11 col-ms-11 col-lg-11 border card m-2 ml-5"
+                          id="line"
+                        >
+                          <span id="t3"></span>
+                        </div>
+                      </div>
+                    </main>
+                  </div>
+                  <div class="row">
+                    <main class="main-content col-lg-12 col-md-12 col-sm-12  ">
+                      <div class="h-100">
+                        <div
+                          class="my-chart col-xs-11 col-md-11 col-ms-11 col-lg-11 border card m-2 ml-5"
+                          id="bars2"
+                        >
+                          <span id="t4"></span>
+                        </div>
+                      </div>
+                    </main>
+                  </div>
+                  <div class="row">
+                    <main class="main-content col-lg-12 col-md-12 col-sm-12 ">
+                      <div class="h-100">
+                        <div
+                          class="my-chart col-xs-11 col-md-11 col-ms-11 col-lg-11 border card m-2 ml-5"
+                          id="pie"
+                        >
+                          <span id="t5"></span>
+                        </div>
+                      </div>
+                    </main>
+                  </div>
+                </div>
                 <div
-                  class="my-chart col2 col-xs-3 col-md-3 col-ms-3 col-lg-3 border card m-2 mt-3 "
+                  class="my-chart col-xs-2 col-md-2 col-ms-2 col-lg-2 border card m-2 mt-2"
                   id="my-parent"
                 >
                   <div id="my-child">
-                    <p class="text-justify">
-                      Ce site permet de visualiser un jeu de données qui se
-                      compose des films et séries qui sont disponible sur la
-                      plateforme Netflix depuis 2008. Les données sont
-                      collectées depuis Flixable qui est un moteur de recherche
-                      pour Netflix.
+                    <p class="text-justify p1">
+                      <br />In this figure, we can observe four parts : the
+                      geographical map which is colored by the number of TV show
+                      and Movies, a legend which shows the color intensity,the
+                      left text shows the interval and finally you can find a
+                      text in the top which represent the type of the filter. At
+                      first, we use no filter. So the number here is the total
+                      number of TV shows and movies. If we use a filter for
+                      example "TV-14", we will only consider the movies and TV
+                      shows satisfies the filter "TV-14". The legend and text
+                      will adapt with the filter.
+                    </p>
+                    <p class="text-justify p2">
+                      <br />This graph shows the distribution of the number TV
+                      shows and Movies in diffrent PG(parental guideline)
+                      grouped by the Year.
+                    </p>
+                    <p class="text-justify p3">
+                      <br />This graph shows the number of movies and TV shows
+                      added to Netflix each year since 2008, as you can see the
+                      graph is made up of two curves, one for Movies and the
+                      other for TV shows,
+                    </p>
+                    <p class="text-justify p4">
+                      <br />This graph shows the number of Movies according to
+                      their periods in minutes.
+                    </p>
+                    <p class="text-justify p5">
+                      <br />This graph shows the proportion of different
+                      types(children, horrible,international movies) of movies.
                     </p>
                   </div>
                 </div>
               </div>
             </main>
           </div>
-          <div class="row">
-            <main class="main-content col-lg-12 col-md-12 col-sm-12  ">
-              <div class="h-100">
-                <div
-                  style="text-align:center;"
-                  class="my-chart col-xs-7 col-md-7 col-ms-7 col-lg-7 border card m-2 ml-5"
-                  id="bars"
-                ></div>
-                <div
-                  class="my-chart col-xs-4 col-md-4 col-ms-4 col-lg-4 border card m-2"
-                  id="pie"
-                ></div>
-              </div>
-            </main>
-          </div>
-          <div class="row">
-            <main class="main-content col-lg-12 col-md-12 col-sm-12 ">
-              <div class="h-100">
-                <div
-                  class="my-chart col-xs-6 col-md-6 col-ms-6 col-lg-6 border card m-2 ml-5"
-                  id="bars2"
-                ></div>
-                <div
-                  class="my-chart col-xs-5 col-md-5 col-ms-5 col-lg-5 border card m-2"
-                  style="text-align:center;"
-                  id="line"
-                ></div>
-              </div>
-            </main>
-          </div>
         </div>
       </div>
     </div>
-    <!-- 
-    <div style="background-color:#FFD700;height:100px;width:100px;float:right;">
-      <b id="filter_name"> Tout le monde</b>
-    </div> -->
+    <!-- Footer -->
+    <footer class="page-footer font-small blue pt-4">
+      <!-- Footer Links -->
+      <div class="container-fluid text-center text-md-left">
+        <!-- Grid row -->
+        <div class="row">
+          <!-- Grid column -->
+          <div class="col-md-6 mt-md-0 mt-3">
+            <!-- Content -->
+            <h5 class="text-uppercase">Description :</h5>
+            <p>
+              The aim of this project is to make some visualisations based on a
+              dataset which consists of films and TV shows which have been
+              available on Netflix since 2008. We found the dataset from Kaggle.
+              It is collected by a search engine named FLixable. In this
+              project, we can observe the distribution of TV shows and movies in
+              different country. There are 5 figures in total including a
+              geomap, a stacked bar chart, a pie char, a bar char and a line
+              char.
+            </p>
+          </div>
+          <!-- Grid column -->
+
+          <hr class="clearfix w-100 d-md-none pb-3" />
+
+          <!-- Grid column -->
+          <div class="col-md-3 mb-md-0 mb-3">
+            <!-- Links -->
+            <h5 class="text-uppercase">Authors :</h5>
+
+            <ul class="list-unstyled">
+              <li>
+                <b>Rui Yang</b>
+              </li>
+              <li>
+                <b>EL MORABET Hicham</b>
+              </li>
+              <li>
+                <b>ELMAGHRAOUI Imran</b>
+              </li>
+            </ul>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-3 mb-md-0 mb-3">
+            <!-- Links -->
+            <h5 class="text-uppercase">Useful Links :</h5>
+
+            <ul class="list-unstyled">
+              <li>
+                <a href="https://www.kaggle.com/shivamb/netflix-shows"
+                  >DataSet used
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/ruiyang123/giao.netflix.github.io"
+                  >Github Repo</a
+                >
+              </li>
+              <li>
+                <a href="https://github.com/LyonDataViz/MOS5.5-Dataviz"
+                  >Data Visulisation Course</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <!-- Grid row -->
+      </div>
+      <!-- Footer Links -->
+
+      <!-- Copyright -->
+      <div class="footer-copyright text-center py-3">
+        © 2020 Copyright: Netflix Data Visulization
+      </div>
+      <!-- Copyright -->
+    </footer>
+    <!-- Footer -->
 
     <script>
+      /*MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP
+            ----------------------------------------------------------------
+                  */
+
       var margin = { top: 20, right: 10, bottom: 20, left: 10 };
       var width = document.getElementById("map").clientWidth;
       console.log(width);
@@ -106,22 +272,35 @@
         .domain([-width / 2, width / 2])
         .range([0, width]);
 
-      var a = d3.rgb(150, 0, 0);
-      var b = d3.rgb(255, 0, 0);
-      var compute = d3.interpolate(a, b);
-      var linear = d3
-        .scaleLinear()
-        .domain([0, 400])
-        .range([0, 1]);
-      var linear2 = d3
-        .scaleLinear()
-        .domain([0, 100])
-        .range([0, 1]);
-      let linear3 = d3
-        .scaleLinear()
-        .domain([0, 2000])
-        .range([0, 1]);
+      let div = d3
+        .select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .attr("id", "tooltip_map")
+        .style("opacity", 0)
+        .style("background-color", "#e5e5df");
+
+      let div_stack_bar = d3
+        .select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .attr("id", "tooltip_stack_bar")
+        .style("opacity", 0)
+        .style("background-color", "#e5e5df");
+
       let compute2 = d3.interpolate("red", "blue");
+
+      let scale = d3
+        .scaleLog()
+        .domain([1, 2000])
+        .range([0, 1]);
+      let scale2 = d3
+        .scaleLinear()
+        .domain([1, 1000])
+        .range([0, 1]);
+      //console.log(scale(4.5))
+      //console.log(scale(Math.pow(max_v,0.3)))
+      let colors = d3.scaleSequential(d3.interpolateReds);
 
       var view = null,
         currentTransform = null;
@@ -140,22 +319,26 @@
       view = svg.append("g").attr("class", "view");
       if (currentTransform) view.attr("transform", currentTransform);
 
-      var projection = d3.geoEqualEarth().rotate([-10, 0]);
+      var projection = d3
+        .geoEqualEarth()
+        .scale((width + 1) / 2 / Math.PI)
+        .translate([width / 2, height / 2])
+        .precision(0.1); //rotate([-10, 0]);
 
       var path = d3
         .geoPath() // d3.geo.path avec d3 version 3
         .projection(projection);
       d3.json(
-        "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_country.json",
+        "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_geoMap/data_country.json",
         function(data) {
           d3.json(
-            "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_diff_country.json",
+            "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_stackedBar/data_diff_country.json",
             function(data2) {
               d3.json(
-                "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/new_data_type_country.json",
+                "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_pieChart/new_data_type_country.json",
                 function(data3) {
                   d3.json(
-                    "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/countries-50m.json",
+                    "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_geoMap/countries-50m.json",
                     function(error, world) {
                       // console.log(world.objects.countries.geometries)
 
@@ -241,18 +424,18 @@
                         .append("path")
                         .attr("d", path)
                         .attr("id", "countryplot")
-                        .attr("class", "carte")
+                        .style("stroke", "white")
+                        .style("stroke-width", 0.3)
                         .attr("fill", function(d, i) {
-                          //console.log(d.properties.nomb)
-                          //console.log(d.properties.name)
-                          if (d.properties.nomb == -1) {
-                            return d3.rgb(120, 120, 120);
+                          if (d.properties.nomb > 1) {
+                            return colors(scale(d.properties.nomb));
+                          } else if (d.properties.nomb == -1) {
+                            return "#e6e6e6";
                           } else {
-                            return compute(linear(d.properties.nomb));
+                            return d3.rgb(254, 229, 217);
                           }
                         })
                         .on("click", function(d) {
-                          //  console.log(d.properties)
                           drawCountry(
                             d.properties.genre_value,
                             d.properties.name
@@ -264,7 +447,7 @@
                           );
 
                           d3.json(
-                            "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_date_country.json",
+                            "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_lineChart/data_date_country.json",
                             function(error, data_line) {
                               if (error) throw error;
 
@@ -274,7 +457,7 @@
                           );
 
                           d3.json(
-                            "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_duration_country.json",
+                            "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_barChart/data_duration_country.json",
                             function(error, data_bar) {
                               if (error) throw error;
 
@@ -285,7 +468,7 @@
 
                           if (d.properties.nomb == -1) {
                             d3.json(
-                              "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_date_all.json",
+                              "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_lineChart/data_date_all.json",
                               function(error, data) {
                                 if (error) throw error;
 
@@ -295,7 +478,7 @@
                             );
 
                             d3.json(
-                              "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_duration_all.json",
+                              "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_barChart/data_duration_all.json",
                               function(error, data) {
                                 if (error) throw error;
 
@@ -305,51 +488,47 @@
                             );
                           }
                         })
-                        .on("mouseover", function() {
-                          tooltip.style("display", null);
+                        .on("mouseover", function(d) {
+                          div
+                            .transition()
+                            .duration(100)
+                            .style("opacity", 1);
+                          if (d.properties.nomb > 0) {
+                            div
+                              .html(
+                                "<b>" +
+                                  d.properties.name +
+                                  "</br>" +
+                                  "total number :" +
+                                  d.properties.nomb +
+                                  "</b>"
+                              )
+                              .style("left", d3.event.pageX - 50 + "px")
+                              .style("top", d3.event.pageY - 50 + "px");
+                          } else {
+                            div
+                              .html(
+                                "<b>" +
+                                  d.properties.name +
+                                  " </br>" +
+                                  "Missing Data" +
+                                  "</b>"
+                              )
+                              .style("left", d3.event.pageX - 50 + "px")
+                              .style("top", d3.event.pageY - 50 + "px");
+                          }
+                          d3.select(this).attr("class", "hover");
                         })
-                        .on("mouseout", function() {
-                          tooltip.style("display", "none");
-                        })
-                        .on("mousemove", function(d) {
-                          // console.log(d3.mouse(this))
-                          var xPosition = d3.mouse(this)[0];
-                          var yPosition = d3.mouse(this)[1];
-                          tooltip.attr(
-                            "transform",
-                            "translate(" + xPosition + "," + yPosition + ")"
-                          );
-                          tooltip.select("text").text(function() {
-                            if (d.properties.nomb == -1) {
-                              return d.properties.name + ":" + 0;
-                            } else {
-                              return (
-                                d.properties.name + ":" + d.properties.nomb
-                              );
-                            }
-                          });
+                        .on("mouseout", function(d) {
+                          d3.select(this).attr("class", "");
+                          div
+                            .transition()
+                            .duration(300)
+                            .style("opacity", 0);
                         });
 
-                      var tooltip = svg
-                        .append("g")
-                        .attr("class", "tooltip")
-                        .style("display", "none");
-
-                      tooltip
-                        .append("rect")
-                        .attr("width", 100)
-                        .attr("height", 20)
-                        .attr("fill", "white")
-                        .style("opacity", 0.5)
-                        .style("rect-anchor", "middle");
-
-                      tooltip
-                        .append("text")
-                        .attr("x", 15)
-                        .attr("dy", "1.2em")
-                        .style("text-anchor", "right")
-                        .attr("font-size", "12px")
-                        .attr("font-weight", "bold");
+                      document.getElementById("t1").innerHTML =
+                        " Color by the number of TV show ansd Movies";
                     }
                   );
                 }
@@ -358,7 +537,7 @@
           );
         }
       );
-
+      createLegend(2000, 10);
       // zoom and pan
       var zoom = d3
         .zoom()
@@ -377,11 +556,123 @@
       }
       svg.call(zoom);
 
+      function createLegend(max_v, num_celles) {
+        d3.selectAll("#legend").remove();
+
+        let legend = d3
+          .select("#map")
+          .select("svg")
+          .append("g")
+          .attr("id", "legend")
+          .attr("width", 100)
+          .attr("height", height)
+          .attr("transform", "translate(70, 100)");
+
+        let scale = d3
+          .scaleLog()
+          .domain([1, max_v])
+          .range([0, 1]);
+        //console.log(scale(4.5))
+        //console.log(scale(Math.pow(max_v,0.3)))
+        let color = d3.scaleSequential(d3.interpolateReds);
+
+        let colors = d3
+          .range(num_celles)
+          .map(function(d) {
+            return color(scale(Math.pow(max_v, d / num_celles)));
+          })
+          .reverse();
+
+        console.log(colors);
+        var legendSize = 30;
+        var legendWidth = 20;
+
+        legend
+          .selectAll()
+          .data(colors)
+          .enter()
+          .append("svg:rect")
+          .attr("height", legendSize + "px")
+          .attr("width", legendWidth + "px")
+          .attr("x", 5)
+          .attr("y", function(d, i) {
+            return i * legendSize;
+          })
+          .style("fill", function(d, i) {
+            return d;
+          })
+          .on("mouseover", function(d, i) {
+            //console.log(i)
+            var b_inf = Math.pow(max_v, (num_celles - i - 1) / num_celles);
+            var b_sup = Math.pow(max_v, (num_celles - i) / num_celles);
+
+            console.log(b_inf, b_sup);
+
+            d3.selectAll("#countryplot").attr("opacity", function(e) {
+              //console.log(e);
+
+              if (e.properties.nomb > b_sup || e.properties.nomb < b_inf) {
+                if (e.properties.nomb >= max_v && b_sup == max_v) {
+                  return 1;
+                } else {
+                  return 0.1;
+                }
+              }
+            });
+          })
+          .on("mouseout", function(d) {
+            d3.selectAll("#countryplot").attr("opacity", 1);
+          });
+
+        legend
+          .append("svg:rect")
+          .attr("height", legendWidth + "px")
+          .attr("width", legendWidth + "px")
+          .attr("x", 5)
+          .attr("y", 320)
+          .style("fill", "#e6e6e6")
+          .on("mouseover", function(d, i) {
+            d3.selectAll("#countryplot").attr("opacity", function(e) {
+              if (e.properties.nomb > 0) {
+                return 0.1;
+              }
+            });
+          })
+          .on("mouseout", function() {
+            d3.selectAll("#countryplot").attr("opacity", 1);
+          });
+
+        d3.range(num_celles).map(function(d, i) {
+          var val;
+          val = parseInt(Math.pow(max_v, (num_celles - d - 1) / num_celles));
+          legend
+            .append("text")
+            .text(val)
+            .attr("x", -15)
+            .attr("y", (i + 1) * legendSize)
+            .style("font-size", "10px")
+            .attr("fill", "black")
+            .attr("class", "legend_text");
+        });
+
+        legend
+          .append("text")
+          .text("No-Data")
+          .attr("x", -30)
+          .attr("y", 335)
+          .style("font-size", "10px")
+          .attr("fill", "black");
+      }
+
+      /*MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP
+            ----------------------------------------------------------------
+                  */
+
       function drawCountry(data, country_name) {
         test = data.country;
 
         d3.json(
-          "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data2.json",
+          "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_stackedBar/data2.json",
           function(data2) {
             console.log(data);
             if (data.country == "None") {
@@ -390,7 +681,7 @@
 
             //  console.log(data)
 
-            var margin = { top: 20, right: 10, bottom: 20, left: 10 };
+            var margin = { top: 100, right: 10, bottom: 20, left: 10 };
             // width = 960 - margin.left - margin.right,
             // height = 500 - margin.top - margin.bottom;
             var width =
@@ -488,7 +779,10 @@
               })
 
               .on("click", function(d) {
-                document.getElementsByClassName("my-chart").innerHTML = d.key;
+                document.getElementById("t1").innerHTML =
+                  "color by the cumulative number of " + d.key;
+
+                var loc_max = 0;
 
                 // console.log(d.data.name)
                 d3.selectAll("#countryplot").attr("fill", function(e) {
@@ -501,18 +795,59 @@
                       if (typeof k[d.key] !== "undefined") {
                         k[d.key] = +k[d.key];
                         val2 = val2 + k[d.key];
+                        if (loc_max < val2) {
+                          loc_max = val2;
+                        }
                       }
                     });
                     //console.log(val2);
                     if (val2 !== -1) {
                       e.properties.nomb = val2 + 1;
-                      return compute(linear2(e.properties.nomb));
+                      return d3.rgb(120, 120, 120);
                     } else {
                       e.properties.nomb = -1;
                       return d3.rgb(120, 120, 120);
                     }
                   } else {
                     return d3.rgb(120, 120, 120);
+                  }
+                });
+
+                var new_scale = d3
+                  .scaleLog()
+                  .domain([1, loc_max])
+                  .range([0, 1]);
+
+                var new_colors = d3.scaleSequential(d3.interpolateReds);
+
+                createLegend(loc_max, 10);
+
+                d3.selectAll("#countryplot").attr("fill", function(e) {
+                  var val2 = -1;
+                  console.log(e);
+                  if (e.properties.genre_value.country !== "None") {
+                    //console.log(e.properties.genre_value)
+                    e.properties.genre_value.forEach(function(k) {
+                      //console.log(k["NR"])
+                      //console.log(typeof(k[d.key]))
+                      if (typeof k[d.key] !== "undefined") {
+                        k[d.key] = +k[d.key];
+                        val2 = val2 + k[d.key];
+                        if (loc_max < val2) {
+                          loc_max = val2;
+                        }
+                      }
+                    });
+                    //console.log(val2);
+                    if (val2 !== -1) {
+                      e.properties.nomb = val2 + 1;
+                      return new_colors(new_scale(e.properties.nomb));
+                    } else {
+                      e.properties.nomb = -1;
+                      return "#e6e6e6";
+                    }
+                  } else {
+                    return "#e6e6e6";
                   }
                 });
               })
@@ -538,21 +873,42 @@
                 return y(d[0]) - y(d[1]);
               })
               .attr("width", x.bandwidth())
-              .on("mouseover", function() {
-                tooltip.style("display", null);
+              .on("mouseover", function(d) {
+                var type;
+                var number = d[1] - d[0];
+
+                for (var key in d.data) {
+                  if (d.data[key] == number) {
+                    type = key;
+                  }
+                }
+
+                console.log(type);
+                //console.log(1);
+                div_stack_bar
+                  .transition()
+                  .duration(100)
+                  .style("opacity", 1);
+
+                div_stack_bar
+                  .html(
+                    "Type :" +
+                      type +
+                      "</br>" +
+                      "year :" +
+                      d.data.year +
+                      "</br>" +
+                      "number :" +
+                      (d[1] - d[0])
+                  )
+                  .style("left", d3.event.pageX - 50 + "px")
+                  .style("top", d3.event.pageY - 50 + "px");
               })
               .on("mouseout", function() {
-                tooltip.style("display", "none");
-              })
-
-              .on("mousemove", function(d) {
-                var xPosition = d3.mouse(this)[0] - 15;
-                var yPosition = d3.mouse(this)[1] - 25;
-                tooltip.attr(
-                  "transform",
-                  "translate(" + xPosition + ", " + yPosition + ")"
-                );
-                tooltip.select("text").text(d[1] - d[0]);
+                div_stack_bar
+                  .transition()
+                  .duration(300)
+                  .style("opacity", 0);
               });
 
             var colors = symbols.map(function(d) {
@@ -623,30 +979,13 @@
               .style("text-anchor", "middle")
               .attr("font-size", "12px")
               .attr("font-weight", "bold");
+
             if (test == "None") {
-              svg
-                .append("text")
-                .attr("id", "title_rating")
-                .attr("x", 200)
-                .attr("y", 20)
-                .attr("dy", "2em")
-                .style("text-anchor", "top")
-                .attr("font-size", "10px")
-                .attr("font-weight", "bold")
-                .text(" tout le monde : Rating and Quantity in different year");
+              document.getElementById("t2").innerHTML =
+                "Tout le monde : Rating and Quantity in different year";
             } else {
-              svg
-                .append("text")
-                .attr("id", "title_rating")
-                .attr("x", 200)
-                .attr("y", 20)
-                .attr("dy", "2em")
-                .style("text-anchor", "top")
-                .attr("font-size", "10px")
-                .attr("font-weight", "bold")
-                .text(
-                  country_name + " : Rating and Quantity in different year"
-                );
+              document.getElementById("t2").innerHTML =
+                country_name + " : Rating and Quantity in different year";
             }
           }
         );
@@ -660,17 +999,19 @@
       function drawPieChart(data, country_name) {
         var test = data.country;
         d3.json(
-          "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/new_data_type.json",
+          "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_pieChart/new_data_type.json",
           function(data2) {
             if (data.country == "None") {
               data = data2;
             }
 
-            var margin = { top: 20, right: 10, bottom: 20, left: 10 };
-            var width = document.getElementById("pie").clientWidth;
+            var margin = { top: 100, right: 0, bottom: 0, left: 0 };
+            var width = document.getElementById("pie").clientWidth - 250;
             console.log(width);
             //this allows us to collect the width of the div where the SVG will go.
-            var height = width / 1.5;
+            var height = width / 2 - 100;
+            var innerRadius = 40,
+              outerRadius = 300;
             var svg = d3
               .select("#pie")
               .append("svg")
@@ -686,171 +1027,216 @@
               .append("g")
               .attr(
                 "transform",
-                "translate(" + width / 3 + "," + height / 1.5 + ")"
+                "translate(" +
+                  (width / 2 + margin.left) +
+                  "," +
+                  (height / 2 + margin.top) +
+                  ")"
               );
 
-            var radius = Math.min(width, height) / 2;
-            var color = d3.scaleOrdinal(d3.schemeCategory20);
-            var pie = d3
-              .pie()
-              .sort(null)
-              .value(function(d) {
-                return d.value;
-              });
+            // sort years ascending
+            // data.sort(function(a, b) {
+            //   return a["value"] - b["value"];
+            // });
+            var x = d3
+              .scaleBand()
+              .range([0, 2 * Math.PI]) // X axis goes from 0 to 2pi = all around the circle. If I stop at 1Pi, it will be around a half circle
+              .align(0) // This does nothing
+              .domain(
+                data.map(function(d) {
+                  return d.name;
+                })
+              ); // The domain of the X axis is the list of states.
+            var y = d3
+              .scaleRadial()
+              .range([innerRadius, outerRadius]) // Domain will be define later.
+              .domain([0, 14000]); // Domain of Y is from 0 to the max seen in the data
 
-            var path = d3
-              .arc()
-              .outerRadius(radius - 10)
-              .innerRadius(0);
+            var tooltip = d3
+              .select("body")
+              .append("div")
+              .style("opacity", 0)
+              .attr("class", "tooltip")
+              .style("background-color", "white")
+              .style("border", "solid")
+              .style("border-width", "2px")
+              .style("border-radius", "5px")
+              .style("padding", "5px")
+              .style("position", "absolute");
 
-            var label = d3
-              .arc()
-              .outerRadius(radius - 40)
-              .innerRadius(radius - 40);
+            // A function that change this tooltip when the user hover a point.
+            // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
+            var showTooltip = function(d) {
+              tooltip
+                .transition()
+                .duration(100)
+                .style("opacity", 1);
+              tooltip
+                .html(
+                  "Type : " +
+                    d.name +
+                    "<br/>Number of Movies & TV Shows : " +
+                    d.value
+                )
+                .style("left", d3.event.pageX - 50 + "px")
+                .style("top", d3.event.pageY - 50 + "px");
+            };
+            var moveTooltip = function(d) {
+              tooltip
+                .style("left", d3.event.pageX - 50 + "px")
+                .style("top", d3.event.pageY - 50 + "px");
+            };
+            // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+            var hideTooltip = function(d) {
+              tooltip
+                .transition()
+                .duration(100)
+                .style("opacity", 0);
+            };
 
-            function angle(d) {
-              var a = ((d.startAngle + d.endAngle) * 90) / Math.PI - 90;
-              return a > 90 ? a - 180 : a;
-            }
-
-            var arc = el
-              .selectAll(".arc")
-              .data(pie(data))
+            // Add the bars
+            el.append("g")
+              .selectAll("path")
+              .data(data)
               .enter()
-              .append("g")
-              .attr("class", "arc");
-
-            arc
               .append("path")
-              .attr("d", path)
-              .attr("id", "piechart")
-              .attr("fill", function(d) {
-                return color(d.data.name);
-              })
-              .style("opacity", 0.8)
+              .attr("fill", "#69b3a2")
+              .attr(
+                "d",
+                d3
+                  .arc() // imagine your doing a part of a donut plot
+                  .innerRadius(innerRadius)
+                  .outerRadius(function(d) {
+                    return y(d["value"]);
+                  })
+                  .startAngle(function(d) {
+                    return x(d.name);
+                  })
+                  .endAngle(function(d) {
+                    return x(d.name) + x.bandwidth();
+                  })
+                  .padAngle(0.01)
+                  .padRadius(innerRadius)
+              )
               .on("click", function(d) {
-                // console.log(d.data.name)
-                d3.selectAll(".carte").attr("fill", function(e) {
-                  //    console.log(e)
-                  if (e.properties.nomb == -1) {
-                    return d3.rgb(120, 120, 120);
-                  } else {
-                    return compute(linear2(e.properties.nomb));
-                  }
-                });
-              })
-              .on("click", function(d) {
-                document.getElementsByClassName("my-chart").innerHTML =
-                  d.data.name;
-
+                document.getElementById("t1").innerHTML =
+                  "color by the cumulative number of " + d.name;
+                var loc_max = 0;
                 // console.log(d.data.name)
                 d3.selectAll("#countryplot").attr("fill", function(e) {
+                  var val2 = -1;
+                  //console.log(e);
                   if (e.properties.type_value.country !== "None") {
-                    var val2 = -1;
-                    //console.log(e.properties.type_value)
-                    e.properties.type_value.forEach(function(nm) {
-                      //console.log(nm.value)
-                      //console.log(nm.name,d.data.name)
-                      if (nm.name == d.data.name) {
-                        console.log(nm.value);
-                        val2 = nm.value;
-                      } else {
-                        return d3.rgb(120, 120, 120);
+                    /// console.log(e.properties.type_value)
+
+                    e.properties.type_value.forEach(function(k) {
+                      // console.log(k)
+                      if (k.name == d.name) {
+                        k.value = +k.value;
+                        val2 = val2 + k.value;
+                        if (loc_max < val2) {
+                          loc_max = val2;
+                        }
                       }
                     });
-
-                    console.log(val2);
-                    if (val2 !== -1 && val2 !== 0) {
-                      e.properties.nomb = val2;
-                      return compute(linear2(val2));
+                    //console.log(val2);
+                    if (val2 !== -1) {
+                      e.properties.nomb = val2 + 1;
+                      return d3.rgb(120, 120, 120);
+                    } else {
+                      e.properties.nomb = -1;
+                      return d3.rgb(120, 120, 120);
                     }
                   } else {
-                    e.properties.nomb = -1;
                     return d3.rgb(120, 120, 120);
                   }
+                });
 
-                  // if(e.properties.type_value.country == "None"){return d3.rgb(120,120,120)}
-                  //else{return compute(linear(e.properties.type_value[d.data.name].value))}
+                console.log(loc_max);
+                var new_scale = d3
+                  .scaleLog()
+                  .domain([1, loc_max])
+                  .range([0, 1]);
+
+                var new_colors = d3.scaleSequential(d3.interpolateReds);
+
+                createLegend(loc_max, 10);
+
+                d3.selectAll("#countryplot").attr("fill", function(e) {
+                  var val2 = -1;
+
+                  if (e.properties.type_value.country !== "None") {
+                    //console.log(e.properties.genre_value)
+                    e.properties.type_value.forEach(function(k) {
+                      // console.log(k)
+                      if (k.name == d.name) {
+                        k.value = +k.value;
+                        val2 = val2 + k.value;
+                        if (loc_max < val2) {
+                          loc_max = val2;
+                        }
+                      }
+                    });
+                    console.log(val2);
+                    //console.log(val2);
+                    if (val2 !== -1) {
+                      e.properties.nomb = val2 + 1;
+                      console.log(e.properties.nomb);
+                      return new_colors(new_scale(e.properties.nomb));
+                    } else {
+                      e.properties.nomb = -1;
+                      return "#e6e6e6";
+                    }
+                  } else {
+                    return "#e6e6e6";
+                  }
                 });
               })
-              .on("mouseover", function(d) {
-                tooltip.style("display", null);
-                svg
-                  .selectAll("#piechart")
-                  .filter(function(e) {
-                    //  console.log(e)
-                    return e.data.name !== d.data.name;
-                  })
-                  .style("opacity", 0.2);
-              })
+              .on("mouseover", showTooltip)
+              .on("mousemove", moveTooltip)
+              .on("mouseleave", hideTooltip);
 
-              .on("mouseout", function(d) {
-                tooltip.style("display", "none");
-                svg.selectAll("#piechart").style("opacity", 1);
-                svg.selectAll("#pietext").style("opacity", 1);
-              })
-              .on("mousemove", function(d) {
-                var xPosition = d3.mouse(this)[0];
-                var yPosition = d3.mouse(this)[1];
-                tooltip.attr(
-                  "transform",
-                  "translate(" + label.centroid(d) + ")"
-                );
-                tooltip.select("text").text(d.data.name + ":" + d.data.value);
-                svg.selectAll("#pietext").style("opacity", 0);
-              });
-            arc
-              .append("text")
-              .attr("id", "pietext")
-              .attr("transform", function(d, i) {
-                return (
-                  "translate(" +
-                  label.centroid(d) +
-                  ") rotate(" +
-                  angle(d) +
-                  ")"
-                );
-              })
-              .attr("dy", "0.2em")
-              .text(function(d) {
-                return d.data.name;
-              });
-
-            var tooltip = arc
+            // Add the labels
+            el.append("g")
+              .selectAll("g")
+              .data(data)
+              .enter()
               .append("g")
-              .attr("class", "tooltip")
-              .style("display", "none");
-
-            tooltip
+              .attr("text-anchor", function(d) {
+                return (x(d.name) + x.bandwidth() / 2 + Math.PI) %
+                  (2 * Math.PI) <
+                  Math.PI
+                  ? "end"
+                  : "start";
+              })
+              .attr("transform", function(d) {
+                return (
+                  "rotate(" +
+                  (((x(d.name) + x.bandwidth() / 2) * 180) / Math.PI - 90) +
+                  ")" +
+                  "translate(" +
+                  (y(d["value"]) + 10) +
+                  ",0)"
+                );
+              })
               .append("text")
-              .attr("x", 15)
-              .attr("dy", "1.2em")
-              .style("text-anchor", "middle")
-              .attr("font-size", "12px")
-              .attr("font-weight", "bold");
+              .text(function(d) {
+                return d.name;
+              })
+              .attr("transform", function(d) {
+                return (x(d.name) + x.bandwidth() / 2 + Math.PI) %
+                  (2 * Math.PI) <
+                  Math.PI
+                  ? "rotate(180)"
+                  : "rotate(0)";
+              })
+              .style("font-size", "11px")
+              .attr("alignment-baseline", "middle");
 
             if (test == "None") {
-              svg
-                .append("text")
-                .attr("id", "title_rating")
-                .attr("x", 0)
-                .attr("y", 0)
-                .attr("dy", "2em")
-                .style("text-anchor", "top")
-                .attr("font-size", "10px")
-                .attr("font-weight", "bold")
-                .text(" tout le monde");
+              document.getElementById("t5").innerHTML = " Tout le monde";
             } else {
-              svg
-                .append("text")
-                .attr("id", "title_rating")
-                .attr("x", 0)
-                .attr("y", 0)
-                .attr("dy", "2em")
-                .style("text-anchor", "top")
-                .attr("font-size", "10px")
-                .attr("font-weight", "bold")
-                .text(country_name);
+              document.getElementById("t5").innerHTML = country_name;
             }
           }
         );
@@ -860,46 +1246,19 @@
         d3.selectAll("#linePlot").remove();
         // set the dimensions and margins of the graph
         var margin = { top: 20, right: 10, bottom: 20, left: 10 };
-        var width = document.getElementById("line").clientWidth - 100;
-        console.log(width);
-        //this allows us to collect the width of the div where the SVG will go.
-        var height = width - 50;
+        var width = document.getElementById("line").clientWidth - 140;
 
-        // parse the date / time
+        var height = width - 340;
+
         var parseTime = d3.timeParse("%Y");
+        var formatTime = d3.timeFormat("%Y");
+        //this allows us to collect the width of the div where the SVG will go.
 
-        // set the ranges
-        var x = d3.scaleTime().range([0, width]);
-        var y = d3.scaleLinear().range([height, 0]);
-
-        // define the movie line
-        var movieline = d3
-          .line()
-          .x(function(d) {
-            return x(d.date);
-          })
-          .y(function(d) {
-            return y(d.movie);
-          });
-
-        // define the tv line
-        var tvline = d3
-          .line()
-          .x(function(d) {
-            return x(d.date);
-          })
-          .y(function(d) {
-            return y(d.tv);
-          });
-
-        // append the svg obgect to the body of the page
-        // appends a 'group' element to 'svg'
-        // moves the 'group' element to the top left margin
         var svg = d3
           .select("#line")
           .append("svg")
           .attr("id", "linePlot")
-          .attr("width", "100%")
+          .attr("width", "120%")
           .attr("height", "100%")
           .append("g")
           .attr("transform", "translate(" + 40 + "," + 22 + ")")
@@ -907,114 +1266,260 @@
 
         var data = data[root];
 
-        // format the data
-        data.forEach(function(d) {
-          d.date = parseTime(d.date);
-          d.movie = +d.movie;
-          d.tv = +d.tv;
-        });
-
         // sort years ascending
         data.sort(function(a, b) {
           return a["date"] - b["date"];
         });
 
-        // Scale the range of the data
-        x.domain(
-          d3.extent(data, function(d) {
-            return d.date;
-          })
-        );
-        y.domain([
-          0,
-          d3.max(data, function(d) {
-            return Math.max(d.movie, d.tv);
-          })
-        ]);
+        data.forEach(function(d) {
+          d.date = parseTime(d.date);
+        });
+        // List of groups (here I have one group per column)
+        var allGroup = ["Movies", "TV_Show"];
 
-        // Add the movie line path.
-        svg
-          .append("path")
-          .data([data])
-          .attr("class", "line")
-          .style("stroke", "#549AD6")
-          .style("fill", "none")
-          .attr("d", movieline);
+        // Reformat the data: we need an array of arrays of {x, y} tuples
+        var dataReady = allGroup.map(function(grpName) {
+          // .map allows to do something for each element of the list
+          return {
+            name: grpName,
+            values: data.map(function(d) {
+              return { date: d.date, value: +d[grpName], type: grpName };
+            })
+          };
+        });
+        // I strongly advise to have a look to dataReady with
+        // console.log(dataReady)
 
-        // Add the tv line path.
-        svg
-          .append("path")
-          .data([data])
-          .attr("class", "line")
-          .style("stroke", "#EF7B2E")
-          .style("fill", "none")
-          .attr("d", tvline);
+        // A color scale: one color for each group
+        var myColor = d3
+          .scaleOrdinal()
+          .domain(allGroup)
+          .range(d3.schemeSet2);
 
-        // Add the X Axis
+        // Add X axis --> it is a date format
+        var x = d3
+          .scaleTime()
+          .domain(
+            d3.extent(data, function(d) {
+              return d.date;
+            })
+          )
+          .range([0, width]);
         svg
           .append("g")
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(x));
 
-        // Add the Y Axis
-        svg.append("g").call(d3.axisLeft(y));
-
+        // Add Y axis
+        var y = d3
+          .scaleLinear()
+          .domain([
+            d3.min(dataReady, function(c) {
+              return d3.min(c.values, function(v) {
+                return v.value;
+              });
+            }),
+            d3.max(dataReady, function(c) {
+              return d3.max(c.values, function(v) {
+                return v.value;
+              });
+            })
+          ])
+          .range([height, 0]);
         svg
-          .append("circle")
-          .attr("cx", 200)
-          .attr("cy", 130)
-          .attr("r", 6)
-          .style("fill", "#549AD6");
-
-        svg
+          .append("g")
+          .call(d3.axisLeft(y))
           .append("text")
-          .attr("x", 220)
-          .attr("y", 130)
-          .text("Movie")
-          .style("font-size", "15px")
-          .attr("alignment-baseline", "middle");
+          .attr("class", "axis-title")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .attr("fill", "#5D6971")
+          .attr("font-size", "1.2em")
+          .attr("font-family", "Arial")
+          .text("Number of Moviess / TV Show");
+
+        // Add the lines
+        var line = d3
+          .line()
+          .x(function(d) {
+            return x(+d.date);
+          })
+          .y(function(d) {
+            return y(+d.value);
+          });
 
         svg
+          .selectAll("myLines")
+          .data(dataReady)
+          .enter()
+          .append("path")
+          .attr("class", function(d) {
+            return d.name;
+          })
+          .attr("d", function(d) {
+            return line(d.values);
+          })
+          .attr("stroke", function(d) {
+            return myColor(d.name);
+          })
+          .style("stroke-width", 4)
+          .style("fill", "none");
+
+        // create a tooltip
+        var Tooltip = d3
+          .select("body")
+          .append("span")
+          .style("opacity", 0)
+          .attr("class", "tooltip")
+          .style("background-color", "white")
+          .style("border", "solid")
+          .style("border-width", "2px")
+          .style("border-radius", "5px")
+          .style("padding", "5px")
+          .style("position", "absolute");
+
+        // Three function that change the tooltip when user hover / move / leave a cell
+        var mouseover = function(d) {
+          Tooltip.style("opacity", 1);
+        };
+        var mousemove = function(d) {
+          Tooltip.html(
+            "Year : " +
+              formatTime(d.date) +
+              "<br/>" +
+              "Number of " +
+              d.type +
+              " : " +
+              d.value
+          )
+            .style("left", d3.event.pageX - 50 + "px")
+            .style("top", d3.event.pageY - 50 + "px");
+        };
+        var mouseleave = function(d) {
+          Tooltip.style("opacity", 0);
+        };
+
+        // Add the points
+        svg
+          // First we need to enter in a group
+          .selectAll("myDots")
+          .data(dataReady)
+          .enter()
+          .append("g")
+          .style("fill", function(d) {
+            return myColor(d.name);
+          })
+          .attr("class", function(d) {
+            return d.name;
+          })
+          // Second we need to enter in the 'values' part of this group
+          .selectAll("myPoints")
+          .data(function(d) {
+            return d.values;
+          })
+          .enter()
           .append("circle")
-          .attr("cx", 200)
-          .attr("cy", 160)
-          .attr("r", 6)
-          .style("fill", "#EF7B2E");
+          .attr("cx", function(d) {
+            return x(d.date);
+          })
+          .attr("cy", function(d) {
+            return y(d.value);
+          })
+          .attr("r", 5)
+          .attr("stroke", "white")
+          .on("mouseover", mouseover)
+          .on("mousemove", mousemove)
+          .on("mouseleave", mouseleave);
 
+        // Add a label at the end of each line
         svg
+          .selectAll("myLabels")
+          .data(dataReady)
+          .enter()
+          .append("g")
           .append("text")
-          .attr("x", 220)
-          .attr("y", 160)
-          .text("TV Show")
-          .style("font-size", "15px")
-          .attr("alignment-baseline", "middle");
+          .attr("class", function(d) {
+            return d.name;
+          })
+          .datum(function(d) {
+            return { name: d.name, value: d.values[d.values.length - 1] };
+          }) // keep only the last value of each time series
+          .attr("transform", function(d) {
+            return (
+              "translate(" + x(d.value.date) + "," + y(d.value.value) + ")"
+            );
+          }) // Put the text at the position of the last point
+          .attr("x", 12) // shift the text a bit more right
+          .text(function(d) {
+            if (d.name == "Movies") return "Movie";
+            else return "TV Show";
+          })
+          .style("fill", function(d) {
+            return myColor(d.name);
+          })
+          .style("font-size", 15);
+
+        // Add a legend (interactive)
+        svg
+          .selectAll("myLegend")
+          .data(dataReady)
+          .enter()
+          .append("g")
+          .append("text")
+          .attr("x", function(d, i) {
+            return 30 + i * 60;
+          })
+          .attr("y", 30)
+          .text(function(d) {
+            if (d.name == "Movies") return "Movie";
+            else return "TV Show";
+          })
+          .style("fill", function(d) {
+            return myColor(d.name);
+          })
+          .style("font-size", 15)
+          .on("click", function(d) {
+            // is the element currently visible ?
+            currentOpacity = d3.selectAll("." + d.name).style("opacity");
+            // Change the opacity: from 0 to 1 or from 1 to 0
+            d3.selectAll("." + d.name)
+              .transition()
+              .style("opacity", currentOpacity == 1 ? 0 : 1);
+          });
 
         // Add title
         if (root == "dates") {
-          svg
-            .append("text")
-            .text("Tous : Movies and TV Shows per year")
-            .attr("y", 20)
-            .attr("x", 80)
-            .attr("font-size", 14)
-            .attr("font-family", "Consolas");
+          // svg
+          //   .append("text")
+          //   .text("Tous : Movies and TV Shows per year")
+          //   .attr("y", 20)
+          //   .attr("x", 80)
+          //   .attr("font-size", 14)
+          //   .attr("font-family", "Consolas");
+
+          document.getElementById("t3").innerHTML =
+            "Tous : Movies and TV Shows per year";
         } else {
-          svg
-            .append("text")
-            .text(root + " : Movies and TV Shows per year")
-            .attr("y", 20)
-            .attr("x", 80)
-            .attr("font-size", 14)
-            .attr("font-family", "Consolas");
+          // svg
+          //   .append("text")
+          //   .text(root + " : Movies and TV Shows per year")
+          //   .attr("y", 20)
+          //   .attr("x", 80)
+          //   .attr("font-size", 14)
+          //   .attr("font-family", "Consolas");
+          document.getElementById("t3").innerHTML =
+            root + " : Movies and TV Shows per year";
         }
       }
 
       function drawBar(data, root) {
-        var margin = { top: 20, right: 10, bottom: 20, left: 10 };
+        var margin = { top: 150, right: 10, bottom: 20, left: 10 };
         var width = document.getElementById("bars2").clientWidth - 100;
         console.log(width);
         //this allows us to collect the width of the div where the SVG will go.
-        var height = width / 1.5;
+        var height = width / 1.5 - margin.top - margin.bottom + 30;
         // set the ranges
         var x = d3
           .scaleBand()
@@ -1056,6 +1561,42 @@
           })
         ]);
 
+        var tooltip = d3
+          .select("body")
+          .append("div")
+          .style("opacity", 0)
+          .attr("class", "tooltip")
+          .style("background-color", "white")
+          .style("border", "solid")
+          .style("border-width", "2px")
+          .style("border-radius", "5px")
+          .style("padding", "5px")
+          .style("position", "absolute");
+
+        var showTooltip = function(d) {
+          tooltip
+            .transition()
+            .duration(100)
+            .style("opacity", 1);
+          tooltip
+            .html("Range: " + d.duration + " - " + (d.duration + 10) + " min")
+            .style("left", d3.event.pageX - 50 + "px")
+            .style("top", d3.event.pageY - 50 + "px");
+        };
+
+        var moveTooltip = function(d) {
+          tooltip
+            .style("left", d3.event.pageX - 50 + "px")
+            .style("top", d3.event.pageY - 50 + "px");
+        };
+        // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+        var hideTooltip = function(d) {
+          tooltip
+            .transition()
+            .duration(100)
+            .style("opacity", 0);
+        };
+
         // append the rectangles for the bar chart
         svg
           .selectAll(".bar")
@@ -1072,7 +1613,31 @@
           })
           .attr("height", function(d) {
             return height - y(d.value);
-          });
+          })
+          .attr("fill", "steelblue")
+          .on("mouseover", showTooltip)
+          .on("mousemove", moveTooltip)
+          .on("mouseleave", hideTooltip);
+        // add the x Axis
+        svg
+          .append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+
+        // add the y Axis
+        svg
+          .append("g")
+          .call(d3.axisLeft(y))
+          .append("text")
+          .attr("class", "axis-title")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .attr("fill", "#5D6971")
+          .attr("font-size", "1.2em")
+          .attr("font-family", "Arial")
+          .text("Number of Moviess / TV Show");
 
         // add the x Axis
         svg
@@ -1084,21 +1649,9 @@
         svg.append("g").call(d3.axisLeft(y));
 
         if (root == "durations") {
-          svg
-            .append("text")
-            .text("Tous : Durations")
-            .attr("y", 20)
-            .attr("x", 80)
-            .attr("font-size", 14)
-            .attr("font-family", "Consolas");
+          document.getElementById("t4").innerHTML = "Tous : Durations";
         } else {
-          svg
-            .append("text")
-            .text(root + " : Durations")
-            .attr("y", 20)
-            .attr("x", 80)
-            .attr("font-size", 14)
-            .attr("font-family", "Consolas");
+          document.getElementById("t4").innerHTML = root + " : Durations";
         }
       }
 
@@ -1107,7 +1660,7 @@
       drawPieChart(data, "None");
 
       d3.json(
-        "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_date_all.json",
+        "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_lineChart/data_date_all.json",
         function(error, data) {
           if (error) throw error;
 
@@ -1117,7 +1670,7 @@
       );
 
       d3.json(
-        "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_duration_all.json",
+        "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data/data_barChart/data_duration_all.json",
         function(error, data) {
           if (error) throw error;
 
