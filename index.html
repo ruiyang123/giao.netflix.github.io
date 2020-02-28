@@ -1230,6 +1230,83 @@
                   ? "rotate(180)"
                   : "rotate(0)";
               })
+             .on("click", function(d) {
+                document.getElementById("t1").innerHTML =
+                  "color by the cumulative number of " + d.name;
+                var loc_max = 0;
+                // console.log(d.data.name)
+                d3.selectAll("#countryplot").attr("fill", function(e) {
+                  var val2 = -1;
+                  //console.log(e);
+                  if (e.properties.type_value.country !== "None") {
+                    /// console.log(e.properties.type_value)
+
+                    e.properties.type_value.forEach(function(k) {
+                      // console.log(k)
+                      if (k.name == d.name) {
+                        k.value = +k.value;
+                        val2 = val2 + k.value;
+                        if (loc_max < val2) {
+                          loc_max = val2;
+                        }
+                      }
+                    });
+                    //console.log(val2);
+                    if (val2 !== -1) {
+                      e.properties.nomb = val2 + 1;
+                      return d3.rgb(120, 120, 120);
+                    } else {
+                      e.properties.nomb = -1;
+                      return d3.rgb(120, 120, 120);
+                    }
+                  } else {
+                    return d3.rgb(120, 120, 120);
+                  }
+                });
+
+                console.log(loc_max);
+                var new_scale = d3
+                  .scaleLog()
+                  .domain([1, loc_max])
+                  .range([0, 1]);
+
+                var new_colors = d3.scaleSequential(d3.interpolateReds);
+
+                createLegend(loc_max, 10);
+
+                d3.selectAll("#countryplot").attr("fill", function(e) {
+                  var val2 = -1;
+
+                  if (e.properties.type_value.country !== "None") {
+                    //console.log(e.properties.genre_value)
+                    e.properties.type_value.forEach(function(k) {
+                      // console.log(k)
+                      if (k.name == d.name) {
+                        k.value = +k.value;
+                        val2 = val2 + k.value;
+                        if (loc_max < val2) {
+                          loc_max = val2;
+                        }
+                      }
+                    });
+                    console.log(val2);
+                    //console.log(val2);
+                    if (val2 !== -1) {
+                      e.properties.nomb = val2 + 1;
+                      console.log(e.properties.nomb);
+                      return new_colors(new_scale(e.properties.nomb));
+                    } else {
+                      e.properties.nomb = -1;
+                      return "#e6e6e6";
+                    }
+                  } else {
+                    return "#e6e6e6";
+                  }
+                });
+              })
+              .on("mouseover", showTooltip)
+              .on("mousemove", moveTooltip)
+              .on("mouseleave", hideTooltip)
               .style("font-size", "11px")
               .attr("alignment-baseline", "middle");
 
