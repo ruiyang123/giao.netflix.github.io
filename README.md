@@ -1,4 +1,4 @@
-# Netflix Analysis
+# Netflix Data Visualization
 
 ## 1. Participants 
 
