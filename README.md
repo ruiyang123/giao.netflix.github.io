@@ -19,14 +19,25 @@ There are 5 figures in total including a geomap, a stacked bar chart, a pie char
 ## Screenshots
 
 ### GeoMap
-In this figure, we can observe four parts : the geographical map which is colored by the number of TV show and Movies, a legend which shows the color intensity,the left text shows the interval and finally you can find a text in the top which represent the type of the filter. At first, we use no filter. So the number here is the total number of TV shows and movies. If we use a filter for example "TV-14", we will only consider the movies and TV shows satisfies the filter "TV-14".
+In this figure, we can observe four parts : the geographical map which is colored by the number of TV show and Movies, a legend which shows the color intensity,the left text shows the interval and finally you can find a text in the top which represent the type of the filter. At first, we use no filter. So the number here is the total number of TV shows and movies. If we use a filter for example "TV-14", we will only consider the movies and TV shows satisfies the filter "TV-14". The legend and text will adapt with the filter.
+![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/f.PNG)
 
-![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/f.PNG)
+### stacked bar plot
+This 
+![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/figure2.PNG)
+
+### pie chart
+![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/figure3.PNG)
+
+### bar chart
+![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/figure3.PNG)
+
+### line chart
+![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/figure3.PNG)
 
 
-![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/figure2.PNG)
 
-![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/figure3.PNG)
+
 
 ## References
 
