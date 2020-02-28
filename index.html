@@ -1,187 +1,1159 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-  <style>
-    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
-  </style>
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<body>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
 
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://d3js.org/d3-array.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.js"></script>
+  </head>
 
+  <body>
+    <div class="page-holder bg-cover">
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-light bg-gradinent sticky-top"
+      >
+        <a class="navbar-brand text-white title-margin logo" href="#"
+          >Netflix Analysis</a
+        >
+      </nav>
+      <div>
+        <div class="container-fluid ">
+          <div class="row1">
+            <main class="main-content col-lg-12 col-md-12 col-sm-12 ">
+              <div class="h-100">
+                <div
+                  class="my-chart col-xs-8 col-md-8 col-ms-8 col-lg-8 border card m-2 ml-5 mt-3"
+                  id="map"
+                ></div>
 
+                <div
+                  class="my-chart col2 col-xs-3 col-md-3 col-ms-3 col-lg-3 border card m-2 mt-3 "
+                  id="my-parent"
+                >
+                  <div id="my-child">
+                    <p class="text-justify">
+                      Ce site permet de visualiser un jeu de données qui se
+                      compose des films et séries qui sont disponible sur la
+                      plateforme Netflix depuis 2008. Les données sont
+                      collectées depuis Flixable qui est un moteur de recherche
+                      pour Netflix.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+          <div class="row">
+            <main class="main-content col-lg-12 col-md-12 col-sm-12  ">
+              <div class="h-100">
+                <div
+                  style="text-align:center;"
+                  class="my-chart col-xs-7 col-md-7 col-ms-7 col-lg-7 border card m-2 ml-5"
+                  id="bars"
+                ></div>
+                <div
+                  class="my-chart col-xs-4 col-md-4 col-ms-4 col-lg-4 border card m-2"
+                  id="pie"
+                ></div>
+              </div>
+            </main>
+          </div>
+          <div class="row">
+            <main class="main-content col-lg-12 col-md-12 col-sm-12 ">
+              <div class="h-100">
+                <div
+                  class="my-chart col-xs-6 col-md-6 col-ms-6 col-lg-6 border card m-2 ml-5"
+                  id="bars2"
+                ></div>
+                <div
+                  class="my-chart col-xs-5 col-md-5 col-ms-5 col-lg-5 border card m-2"
+                  style="text-align:center;"
+                  id="line"
+                ></div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 
+    <div style="background-color:#FFD700;height:100px;width:100px;float:right;">
+      <b id="filter_name"> Tout le monde</b>
+    </div> -->
 
-  <script>
-var margin = {top:100, right:30,bottom:30,left:40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    <script>
+      var margin = { top: 20, right: 10, bottom: 20, left: 10 };
+      var width = document.getElementById("map").clientWidth;
+      console.log(width);
+      //this allows us to collect the width of the div where the SVG will go.
+      var height = width / 1.6;
 
-var y = d3.scaleLinear()
-					.rangeRound([height,0])
-.nice();
-    
-var x = d3.scaleBand()
-					.rangeRound([0,width])
-.paddingInner(0.05)
-.align(0.1)
+      var xScale = d3
+        .scaleLinear()
+        .domain([-width / 2, width / 2])
+        .range([0, width]);
 
-var z = d3.scaleOrdinal(d3.schemeCategory20)
+      var a = d3.rgb(150, 0, 0);
+      var b = d3.rgb(255, 0, 0);
+      var compute = d3.interpolate(a, b);
+      var linear = d3
+        .scaleLinear()
+        .domain([0, 400])
+        .range([0, 1]);
+      var linear2 = d3
+        .scaleLinear()
+        .domain([0, 100])
+        .range([0, 1]);
+      let linear3 = d3
+        .scaleLinear()
+        .domain([0, 2000])
+        .range([0, 1]);
+      let compute2 = d3.interpolate("red", "blue");
 
-var parseTime = d3.timeParse("%Y")
-  d3.json('https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data2.json', function(error, raw) {		
-    var symbols = []
-    
-    for (var key in raw[0]){
-      if (key!="year"){
-        symbols.push(key)
-        
+      var view = null,
+        currentTransform = null;
+      var yScale = d3
+        .scaleLinear()
+        .domain([-height / 2, height / 2])
+        .range([height, 0]);
+      var color = d3.scaleOrdinal(d3.schemeCategory20);
+      var svg = d3
+        .select("#map")
+        .append("svg")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("transform", "translate(" + -30 + "," + -30 + ")")
+        .call(responsivefy);
+      view = svg.append("g").attr("class", "view");
+      if (currentTransform) view.attr("transform", currentTransform);
+
+      var projection = d3.geoEqualEarth().rotate([-10, 0]);
+
+      var path = d3
+        .geoPath() // d3.geo.path avec d3 version 3
+        .projection(projection);
+      d3.json(
+        "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_country.json",
+        function(data) {
+          d3.json(
+            "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_diff_country.json",
+            function(data2) {
+              d3.json(
+                "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/new_data_type_country.json",
+                function(data3) {
+                  d3.json(
+                    "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/countries-50m.json",
+                    function(error, world) {
+                      // console.log(world.objects.countries.geometries)
+
+                      //console.log(world.objects.countries.geometries);
+
+                      for (var i in world.objects.countries.geometries) {
+                        //console.log(world.objects.countries.geometries[i].properties);
+
+                        world.objects.countries.geometries[i].properties[
+                          "nomb"
+                        ] = -1;
+                        // console.log(world.objects.countries.geometries[i].properties)
+                      }
+
+                      for (var i = 0; i < data.length; i++) {
+                        var country = data[i].country;
+                        var tol_nom = data[i].value;
+
+                        for (var j in world.objects.countries.geometries) {
+                          if (
+                            world.objects.countries.geometries[j].properties
+                              .name == country
+                          ) {
+                            world.objects.countries.geometries[j].properties[
+                              "nomb"
+                            ] = tol_nom;
+                          }
+                        }
+                      }
+
+                      for (var i in world.objects.countries.geometries) {
+                        //console.log(world.objects.countries.geometries[i].properties);
+
+                        world.objects.countries.geometries[i].properties[
+                          "genre_value"
+                        ] = { country: "None", value_type: 0 };
+                        world.objects.countries.geometries[i].properties[
+                          "type_value"
+                        ] = { country: "None", value: 0 };
+                        // console.log(world.objects.countries.geometries[i].properties)
+                      }
+
+                      for (var i = 0; i < data2.length; i++) {
+                        var country = data2[i].country;
+                        var vt = data2[i].value_type;
+
+                        for (var j in world.objects.countries.geometries) {
+                          if (
+                            world.objects.countries.geometries[j].properties
+                              .name == country
+                          ) {
+                            world.objects.countries.geometries[j].properties[
+                              "genre_value"
+                            ] = vt;
+                          }
+                        }
+                      }
+                      for (var i = 0; i < data3.length; i++) {
+                        // console.log(data3)
+                        var country = data3[i].country;
+                        var gt = data3[i].value;
+
+                        for (var j in world.objects.countries.geometries) {
+                          if (
+                            world.objects.countries.geometries[j].properties
+                              .name == country
+                          ) {
+                            world.objects.countries.geometries[j].properties[
+                              "type_value"
+                            ] = gt;
+                          }
+                        }
+                      }
+                      // console.log(world.objects.countries.geometries)
+
+                      svg
+                        .selectAll("path")
+                        .data(
+                          topojson.feature(world, world.objects.countries)
+                            .features
+                        )
+                        .enter()
+                        .append("path")
+                        .attr("d", path)
+                        .attr("id", "countryplot")
+                        .attr("class", "carte")
+                        .attr("fill", function(d, i) {
+                          //console.log(d.properties.nomb)
+                          //console.log(d.properties.name)
+                          if (d.properties.nomb == -1) {
+                            return d3.rgb(120, 120, 120);
+                          } else {
+                            return compute(linear(d.properties.nomb));
+                          }
+                        })
+                        .on("click", function(d) {
+                          //  console.log(d.properties)
+                          drawCountry(
+                            d.properties.genre_value,
+                            d.properties.name
+                          );
+                          //console.log(d.properties.type_value)
+                          drawPieChart(
+                            d.properties.type_value,
+                            d.properties.name
+                          );
+
+                          d3.json(
+                            "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_date_country.json",
+                            function(error, data_line) {
+                              if (error) throw error;
+
+                              // trigger render
+                              drawLine(data_line, d.properties.name);
+                            }
+                          );
+
+                          d3.json(
+                            "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_duration_country.json",
+                            function(error, data_bar) {
+                              if (error) throw error;
+
+                              // trigger render
+                              drawBar(data_bar, d.properties.name);
+                            }
+                          );
+
+                          if (d.properties.nomb == -1) {
+                            d3.json(
+                              "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_date_all.json",
+                              function(error, data) {
+                                if (error) throw error;
+
+                                // trigger render
+                                drawLine(data, "dates");
+                              }
+                            );
+
+                            d3.json(
+                              "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_duration_all.json",
+                              function(error, data) {
+                                if (error) throw error;
+
+                                // trigger render
+                                drawBar(data, "durations");
+                              }
+                            );
+                          }
+                        })
+                        .on("mouseover", function() {
+                          tooltip.style("display", null);
+                        })
+                        .on("mouseout", function() {
+                          tooltip.style("display", "none");
+                        })
+                        .on("mousemove", function(d) {
+                          // console.log(d3.mouse(this))
+                          var xPosition = d3.mouse(this)[0];
+                          var yPosition = d3.mouse(this)[1];
+                          tooltip.attr(
+                            "transform",
+                            "translate(" + xPosition + "," + yPosition + ")"
+                          );
+                          tooltip.select("text").text(function() {
+                            if (d.properties.nomb == -1) {
+                              return d.properties.name + ":" + 0;
+                            } else {
+                              return (
+                                d.properties.name + ":" + d.properties.nomb
+                              );
+                            }
+                          });
+                        });
+
+                      var tooltip = svg
+                        .append("g")
+                        .attr("class", "tooltip")
+                        .style("display", "none");
+
+                      tooltip
+                        .append("rect")
+                        .attr("width", 100)
+                        .attr("height", 20)
+                        .attr("fill", "white")
+                        .style("opacity", 0.5)
+                        .style("rect-anchor", "middle");
+
+                      tooltip
+                        .append("text")
+                        .attr("x", 15)
+                        .attr("dy", "1.2em")
+                        .style("text-anchor", "right")
+                        .attr("font-size", "12px")
+                        .attr("font-weight", "bold");
+                    }
+                  );
+                }
+              );
+            }
+          );
+        }
+      );
+
+      // zoom and pan
+      var zoom = d3
+        .zoom()
+        .scaleExtent([0.5, 5])
+        .translateExtent([
+          [-width * 2, -height * 2],
+          [width * 2, height * 2]
+        ])
+        .on("zoom", zoomed);
+
+      function zoomed() {
+        currentTransform = d3.event.transform;
+        //console.log(currentTransform)
+        svg.selectAll(".carte").attr("transform", currentTransform);
+        //svg.selectAll(".tooltip").attr("transform", currentTransform);
       }
-    }
-    
-  //console.log(symbols)
-    
-    var years = raw.map(function(d){return d.year;})
+      svg.call(zoom);
 
-    
-    var layers = d3.stack().keys(symbols)(raw)
-    
-    var max = d3.max(layers[layers.length - 1],function(d){return d[1];});
-    
-    y.domain([0,max]);
-    x.domain(years);
-    
-    var svg = d3.select("body").append("svg")
-    						.attr("width",width + margin.left + margin.right)
-    						.attr("height", height + margin.top + margin.bottom)
-    						.append("g")
-    						.attr("transform", "translate("+ margin.left +","+ margin.top +")");
-    //console.log(layers[2].key)
-    svg.append("g").selectAll("g")
-    		.data(layers)
-    .enter().append("g")
-    .style("fill",function(d){return z(d.key);})
-    .attr("class",function(d){return d.key})
-    .attr("id","stack")
-    .on("mouseover",function(d){
-      
-      svg.selectAll("#stack").filter(function(e){
-      
-     // console.log(e.key)
-      //console.log(d.key)
-      return e.key!==d.key;
-    }).style("opacity",.3);
-      
-      svg.selectAll("#leg").filter(function(e){
-        console.log(e)
-        console.log(z(d.key))
-        return e!==z(d.key)
-      }).style("opacity",.3)
-                               
-       })
-    .on("mouseout",function(d){
-      svg.selectAll("#stack").style("opacity",1);
-      svg.selectAll("#leg").style("opacity",1);
-                              
-                              })
-    //.on("mouseover",function(d){ svg.selectAll("."+d.key).style("opacity",1)})
-    
-    .selectAll("rect")
-    .data(function(d){return d;})
-    .enter().append("rect")
-    .attr("x",function(d,i){return x(d.data.year)})
-    .attr("y", function(d){return y(d[1])})
-    .attr("height",function(d){return y(d[0])-y(d[1])})
-    .attr("width",x.bandwidth())
-    .on("mouseover",function(){tooltip.style("display",null);})
-    .on("mouseout",function(){tooltip.style("display","none");})
-    .on("mousemove",function(d){
-      var xPosition = d3.mouse(this)[0]-15;
-      var yPosition = d3.mouse(this)[1] - 25;
-      tooltip.attr("transform","translate("+ xPosition +", "+ yPosition +")");
-      tooltip.select("text").text(d[1]-d[0])
-    })
-    
-    ;
-    
-    var colors = symbols.map(function(d){return z(d)});
-    //console.log(colors)
-    
-    svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
-    
-    svg.append("g")
-      .attr("class", "y axis")
-      .attr("transform", "translate(" + (0) + ", 0)")
-      .call(d3.axisLeft().scale(y))
-  // console.log(layers)
-    
-    var legend = svg.selectAll(".legend")
-    .data(colors)
-    .enter().append("g")
-    .attr("class","legend")
-    .attr("transform",function(d,i){return "translate(30, "+ i*19 +")"})
-    
-    legend.append("rect")
-    .attr("id","leg")
-    .attr("x",18)
-    .attr("width",18)
-    .attr("height",18)
-    .style("fill",function(d,i){return z(symbols[i]);})
-    
-    legend.append("text")
-    .attr("x",36)
-    .attr("y",9)
-    .attr("dy",".35em")
-    .style("text-anchor",'start')
-    .text(function(d,i){ return symbols[i]})
-    
-    var tooltip = svg.append("g")
-    .attr("class","tooltip")
-    .style("display","none");
-    
-    tooltip.append("rect")
-    .attr("width",30)
-    .attr("height",20)
-    .attr("fill","white")
-    .style("opacity",.5);
-    
-    tooltip.append("text")
-    .attr("x",15)
-    .attr("dy","1.2em")
-    .style("text-anchor","middle")
-    .attr("font-size","12px")
-    .attr("font-weight","bold");
+      function drawCountry(data, country_name) {
+        test = data.country;
 
-    svg.append("text")
-    .attr("x",480)
-    .attr("y",20)
-    .attr("dy","2em")
-    .style("text-anchor","middle")
-    .attr("font-size","25px")
-    .attr("font-weight","bold")
-    .text("Rating and Quantity in different year")
-    
-    
-    
-    
-  })
+        d3.json(
+          "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data2.json",
+          function(data2) {
+            console.log(data);
+            if (data.country == "None") {
+              data = data2;
+            }
 
-  </script>
+            //  console.log(data)
 
-  <div id="menu" style="background-color:#FFD700;height:200px;width:200px;float:right;">
-<b>Guide Bar</b>
-<br/>
-<a href="index.html"> Rating and Quantity</a>
-<br/>
-<a href="group_bar.html">Movies and Tv quantity</a>
-<br/>
-<a href="geo_map.html">Geo Map Netflix</a>
-</div>
-</body>
+            var margin = { top: 20, right: 10, bottom: 20, left: 10 };
+            // width = 960 - margin.left - margin.right,
+            // height = 500 - margin.top - margin.bottom;
+            var width =
+              document.getElementById("bars").clientWidth -
+              margin.left -
+              margin.right -
+              100;
+            console.log(width);
+            //this allows us to collect the width of the div where the SVG will go.
+            var height = width / 1.5 - margin.top - margin.bottom + 50;
 
+            var y = d3
+              .scaleLinear()
+              .rangeRound([height, 0])
+              .nice();
 
+            var x = d3
+              .scaleBand()
+              .rangeRound([0, width])
+              .paddingInner(0.05)
+              .align(0.1);
+
+            var z = d3.scaleOrdinal(d3.schemeCategory20);
+
+            var parseTime = d3.timeParse("%Y");
+
+            var symbols = [];
+
+            for (var key in data[0]) {
+              if (key != "year") {
+                symbols.push(key);
+              }
+            }
+
+            //console.log(symbols)
+
+            var years = data.map(function(d) {
+              return d.year;
+            });
+
+            var layers = d3.stack().keys(symbols)(data);
+
+            var max = d3.max(layers[layers.length - 1], function(d) {
+              return d[1];
+            });
+
+            y.domain([0, max]);
+            x.domain(years);
+            d3.selectAll("#countryPlot").remove();
+
+            var svg = d3
+              .select("#bars")
+              .append("svg")
+              // .attr("width", width + margin.left + margin.right)
+              // .attr("height", height + margin.top + margin.bottom)
+              .attr("width", "100%")
+              .attr("height", "100%")
+
+              .attr("id", "countryPlot")
+              .append("g")
+              .attr("transform", "translate(" + 40 + "," + 10 + ")")
+              .call(responsivefy);
+            //console.log(layers[2].key)
+            svg
+              .append("g")
+              .selectAll("g")
+              .data(layers)
+              .enter()
+              .append("g")
+              .style("fill", function(d) {
+                return z(d.key);
+              })
+              .attr("class", function(d) {
+                return d.key;
+              })
+              .attr("id", "stack")
+              .on("mouseover", function(d) {
+                svg
+                  .selectAll("#stack")
+                  .filter(function(e) {
+                    // console.log(e.key)
+                    console.log(d.key);
+                    return e.key !== d.key;
+                  })
+                  .style("opacity", 0.3);
+
+                svg
+                  .selectAll("#leg")
+                  .filter(function(e) {
+                    // console.log(e)
+                    //console.log(z(d.key))
+                    return e !== z(d.key);
+                  })
+                  .style("opacity", 0.3);
+              })
+
+              .on("click", function(d) {
+                document.getElementsByClassName("my-chart").innerHTML = d.key;
+
+                // console.log(d.data.name)
+                d3.selectAll("#countryplot").attr("fill", function(e) {
+                  var val2 = -1;
+                  if (e.properties.genre_value.country !== "None") {
+                    //console.log(e.properties.genre_value)
+                    e.properties.genre_value.forEach(function(k) {
+                      //console.log(k["NR"])
+                      //console.log(typeof(k[d.key]))
+                      if (typeof k[d.key] !== "undefined") {
+                        k[d.key] = +k[d.key];
+                        val2 = val2 + k[d.key];
+                      }
+                    });
+                    //console.log(val2);
+                    if (val2 !== -1) {
+                      e.properties.nomb = val2 + 1;
+                      return compute(linear2(e.properties.nomb));
+                    } else {
+                      e.properties.nomb = -1;
+                      return d3.rgb(120, 120, 120);
+                    }
+                  } else {
+                    return d3.rgb(120, 120, 120);
+                  }
+                });
+              })
+              .on("mouseout", function(d) {
+                svg.selectAll("#stack").style("opacity", 1);
+                svg.selectAll("#leg").style("opacity", 1);
+              })
+              //.on("mouseover",function(d){ svg.selectAll("."+d.key).style("opacity",1)})
+
+              .selectAll("rect")
+              .data(function(d) {
+                return d;
+              })
+              .enter()
+              .append("rect")
+              .attr("x", function(d, i) {
+                return x(d.data.year);
+              })
+              .attr("y", function(d) {
+                return y(d[1]);
+              })
+              .attr("height", function(d) {
+                return y(d[0]) - y(d[1]);
+              })
+              .attr("width", x.bandwidth())
+              .on("mouseover", function() {
+                tooltip.style("display", null);
+              })
+              .on("mouseout", function() {
+                tooltip.style("display", "none");
+              })
+
+              .on("mousemove", function(d) {
+                var xPosition = d3.mouse(this)[0] - 15;
+                var yPosition = d3.mouse(this)[1] - 25;
+                tooltip.attr(
+                  "transform",
+                  "translate(" + xPosition + ", " + yPosition + ")"
+                );
+                tooltip.select("text").text(d[1] - d[0]);
+              });
+
+            var colors = symbols.map(function(d) {
+              return z(d);
+            });
+            //console.log(colors)
+
+            svg
+              .append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x));
+
+            svg
+              .append("g")
+              .attr("class", "y axis")
+              .attr("transform", "translate(" + 0 + ", 0)")
+              .call(d3.axisLeft().scale(y));
+            // console.log(layers)
+
+            var legend = svg
+              .selectAll(".legend")
+              .data(colors)
+              .enter()
+              .append("g")
+              .attr("class", "legend")
+              .attr("transform", function(d, i) {
+                return "translate(30, " + i * 10 + ")";
+              });
+
+            legend
+              .append("rect")
+              .attr("id", "leg")
+              .attr("x", 18)
+              .attr("width", 9)
+              .attr("height", 9)
+              .style("fill", function(d, i) {
+                return z(symbols[i]);
+              });
+
+            legend
+              .append("text")
+              .attr("x", 36)
+              .attr("y", 9)
+              .attr("dy", ".15em")
+              .style("text-anchor", "start")
+              .attr("font-size", 10)
+              .text(function(d, i) {
+                return symbols[i];
+              });
+
+            var tooltip = svg
+              .append("g")
+              .attr("class", "tooltip")
+              .style("display", "none");
+
+            tooltip
+              .append("rect")
+              .attr("width", 30)
+              .attr("height", 20)
+              .attr("fill", "white")
+              .style("opacity", 0.5);
+
+            tooltip
+              .append("text")
+              .attr("x", 15)
+              .attr("dy", "1.2em")
+              .style("text-anchor", "middle")
+              .attr("font-size", "12px")
+              .attr("font-weight", "bold");
+            if (test == "None") {
+              svg
+                .append("text")
+                .attr("id", "title_rating")
+                .attr("x", 200)
+                .attr("y", 20)
+                .attr("dy", "2em")
+                .style("text-anchor", "top")
+                .attr("font-size", "10px")
+                .attr("font-weight", "bold")
+                .text(" tout le monde : Rating and Quantity in different year");
+            } else {
+              svg
+                .append("text")
+                .attr("id", "title_rating")
+                .attr("x", 200)
+                .attr("y", 20)
+                .attr("dy", "2em")
+                .style("text-anchor", "top")
+                .attr("font-size", "10px")
+                .attr("font-weight", "bold")
+                .text(
+                  country_name + " : Rating and Quantity in different year"
+                );
+            }
+          }
+        );
+      }
+
+      var linear2 = d3
+        .scaleLinear()
+        .domain([0, 100])
+        .range([0, 1]);
+
+      function drawPieChart(data, country_name) {
+        var test = data.country;
+        d3.json(
+          "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/new_data_type.json",
+          function(data2) {
+            if (data.country == "None") {
+              data = data2;
+            }
+
+            var margin = { top: 20, right: 10, bottom: 20, left: 10 };
+            var width = document.getElementById("pie").clientWidth;
+            console.log(width);
+            //this allows us to collect the width of the div where the SVG will go.
+            var height = width / 1.5;
+            var svg = d3
+              .select("#pie")
+              .append("svg")
+              .attr("width", "100%")
+              .attr("height", "100%")
+              .attr(
+                "transform",
+                "translate(" + width / 9 + "," + height / 9 + ")"
+              )
+              .attr("id", "countryPlot")
+              .call(responsivefy);
+            var el = svg
+              .append("g")
+              .attr(
+                "transform",
+                "translate(" + width / 3 + "," + height / 1.5 + ")"
+              );
+
+            var radius = Math.min(width, height) / 2;
+            var color = d3.scaleOrdinal(d3.schemeCategory20);
+            var pie = d3
+              .pie()
+              .sort(null)
+              .value(function(d) {
+                return d.value;
+              });
+
+            var path = d3
+              .arc()
+              .outerRadius(radius - 10)
+              .innerRadius(0);
+
+            var label = d3
+              .arc()
+              .outerRadius(radius - 40)
+              .innerRadius(radius - 40);
+
+            function angle(d) {
+              var a = ((d.startAngle + d.endAngle) * 90) / Math.PI - 90;
+              return a > 90 ? a - 180 : a;
+            }
+
+            var arc = el
+              .selectAll(".arc")
+              .data(pie(data))
+              .enter()
+              .append("g")
+              .attr("class", "arc");
+
+            arc
+              .append("path")
+              .attr("d", path)
+              .attr("id", "piechart")
+              .attr("fill", function(d) {
+                return color(d.data.name);
+              })
+              .style("opacity", 0.8)
+              .on("click", function(d) {
+                // console.log(d.data.name)
+                d3.selectAll(".carte").attr("fill", function(e) {
+                  //    console.log(e)
+                  if (e.properties.nomb == -1) {
+                    return d3.rgb(120, 120, 120);
+                  } else {
+                    return compute(linear2(e.properties.nomb));
+                  }
+                });
+              })
+              .on("click", function(d) {
+                document.getElementsByClassName("my-chart").innerHTML =
+                  d.data.name;
+
+                // console.log(d.data.name)
+                d3.selectAll("#countryplot").attr("fill", function(e) {
+                  if (e.properties.type_value.country !== "None") {
+                    var val2 = -1;
+                    //console.log(e.properties.type_value)
+                    e.properties.type_value.forEach(function(nm) {
+                      //console.log(nm.value)
+                      //console.log(nm.name,d.data.name)
+                      if (nm.name == d.data.name) {
+                        console.log(nm.value);
+                        val2 = nm.value;
+                      } else {
+                        return d3.rgb(120, 120, 120);
+                      }
+                    });
+
+                    console.log(val2);
+                    if (val2 !== -1 && val2 !== 0) {
+                      e.properties.nomb = val2;
+                      return compute(linear2(val2));
+                    }
+                  } else {
+                    e.properties.nomb = -1;
+                    return d3.rgb(120, 120, 120);
+                  }
+
+                  // if(e.properties.type_value.country == "None"){return d3.rgb(120,120,120)}
+                  //else{return compute(linear(e.properties.type_value[d.data.name].value))}
+                });
+              })
+              .on("mouseover", function(d) {
+                tooltip.style("display", null);
+                svg
+                  .selectAll("#piechart")
+                  .filter(function(e) {
+                    //  console.log(e)
+                    return e.data.name !== d.data.name;
+                  })
+                  .style("opacity", 0.2);
+              })
+
+              .on("mouseout", function(d) {
+                tooltip.style("display", "none");
+                svg.selectAll("#piechart").style("opacity", 1);
+                svg.selectAll("#pietext").style("opacity", 1);
+              })
+              .on("mousemove", function(d) {
+                var xPosition = d3.mouse(this)[0];
+                var yPosition = d3.mouse(this)[1];
+                tooltip.attr(
+                  "transform",
+                  "translate(" + label.centroid(d) + ")"
+                );
+                tooltip.select("text").text(d.data.name + ":" + d.data.value);
+                svg.selectAll("#pietext").style("opacity", 0);
+              });
+            arc
+              .append("text")
+              .attr("id", "pietext")
+              .attr("transform", function(d, i) {
+                return (
+                  "translate(" +
+                  label.centroid(d) +
+                  ") rotate(" +
+                  angle(d) +
+                  ")"
+                );
+              })
+              .attr("dy", "0.2em")
+              .text(function(d) {
+                return d.data.name;
+              });
+
+            var tooltip = arc
+              .append("g")
+              .attr("class", "tooltip")
+              .style("display", "none");
+
+            tooltip
+              .append("text")
+              .attr("x", 15)
+              .attr("dy", "1.2em")
+              .style("text-anchor", "middle")
+              .attr("font-size", "12px")
+              .attr("font-weight", "bold");
+
+            if (test == "None") {
+              svg
+                .append("text")
+                .attr("id", "title_rating")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("dy", "2em")
+                .style("text-anchor", "top")
+                .attr("font-size", "10px")
+                .attr("font-weight", "bold")
+                .text(" tout le monde");
+            } else {
+              svg
+                .append("text")
+                .attr("id", "title_rating")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("dy", "2em")
+                .style("text-anchor", "top")
+                .attr("font-size", "10px")
+                .attr("font-weight", "bold")
+                .text(country_name);
+            }
+          }
+        );
+      }
+
+      function drawLine(data, root) {
+        d3.selectAll("#linePlot").remove();
+        // set the dimensions and margins of the graph
+        var margin = { top: 20, right: 10, bottom: 20, left: 10 };
+        var width = document.getElementById("line").clientWidth - 100;
+        console.log(width);
+        //this allows us to collect the width of the div where the SVG will go.
+        var height = width - 50;
+
+        // parse the date / time
+        var parseTime = d3.timeParse("%Y");
+
+        // set the ranges
+        var x = d3.scaleTime().range([0, width]);
+        var y = d3.scaleLinear().range([height, 0]);
+
+        // define the movie line
+        var movieline = d3
+          .line()
+          .x(function(d) {
+            return x(d.date);
+          })
+          .y(function(d) {
+            return y(d.movie);
+          });
+
+        // define the tv line
+        var tvline = d3
+          .line()
+          .x(function(d) {
+            return x(d.date);
+          })
+          .y(function(d) {
+            return y(d.tv);
+          });
+
+        // append the svg obgect to the body of the page
+        // appends a 'group' element to 'svg'
+        // moves the 'group' element to the top left margin
+        var svg = d3
+          .select("#line")
+          .append("svg")
+          .attr("id", "linePlot")
+          .attr("width", "100%")
+          .attr("height", "100%")
+          .append("g")
+          .attr("transform", "translate(" + 40 + "," + 22 + ")")
+          .call(responsivefy);
+
+        var data = data[root];
+
+        // format the data
+        data.forEach(function(d) {
+          d.date = parseTime(d.date);
+          d.movie = +d.movie;
+          d.tv = +d.tv;
+        });
+
+        // sort years ascending
+        data.sort(function(a, b) {
+          return a["date"] - b["date"];
+        });
+
+        // Scale the range of the data
+        x.domain(
+          d3.extent(data, function(d) {
+            return d.date;
+          })
+        );
+        y.domain([
+          0,
+          d3.max(data, function(d) {
+            return Math.max(d.movie, d.tv);
+          })
+        ]);
+
+        // Add the movie line path.
+        svg
+          .append("path")
+          .data([data])
+          .attr("class", "line")
+          .style("stroke", "#549AD6")
+          .style("fill", "none")
+          .attr("d", movieline);
+
+        // Add the tv line path.
+        svg
+          .append("path")
+          .data([data])
+          .attr("class", "line")
+          .style("stroke", "#EF7B2E")
+          .style("fill", "none")
+          .attr("d", tvline);
+
+        // Add the X Axis
+        svg
+          .append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+
+        // Add the Y Axis
+        svg.append("g").call(d3.axisLeft(y));
+
+        svg
+          .append("circle")
+          .attr("cx", 200)
+          .attr("cy", 130)
+          .attr("r", 6)
+          .style("fill", "#549AD6");
+
+        svg
+          .append("text")
+          .attr("x", 220)
+          .attr("y", 130)
+          .text("Movie")
+          .style("font-size", "15px")
+          .attr("alignment-baseline", "middle");
+
+        svg
+          .append("circle")
+          .attr("cx", 200)
+          .attr("cy", 160)
+          .attr("r", 6)
+          .style("fill", "#EF7B2E");
+
+        svg
+          .append("text")
+          .attr("x", 220)
+          .attr("y", 160)
+          .text("TV Show")
+          .style("font-size", "15px")
+          .attr("alignment-baseline", "middle");
+
+        // Add title
+        if (root == "dates") {
+          svg
+            .append("text")
+            .text("Tous : Movies and TV Shows per year")
+            .attr("y", 20)
+            .attr("x", 80)
+            .attr("font-size", 14)
+            .attr("font-family", "Consolas");
+        } else {
+          svg
+            .append("text")
+            .text(root + " : Movies and TV Shows per year")
+            .attr("y", 20)
+            .attr("x", 80)
+            .attr("font-size", 14)
+            .attr("font-family", "Consolas");
+        }
+      }
+
+      function drawBar(data, root) {
+        var margin = { top: 20, right: 10, bottom: 20, left: 10 };
+        var width = document.getElementById("bars2").clientWidth - 100;
+        console.log(width);
+        //this allows us to collect the width of the div where the SVG will go.
+        var height = width / 1.5;
+        // set the ranges
+        var x = d3
+          .scaleBand()
+          .range([0, width])
+          .padding(0.1);
+        var y = d3.scaleLinear().range([height, 0]);
+        d3.selectAll("#bar_plot").remove();
+
+        var svg = d3
+          .select("#bars2")
+          .append("svg")
+          .attr("id", "bar_plot")
+          .attr("width", "100%")
+          .attr("height", "100%")
+          .append("g")
+          .attr("transform", "translate(" + 40 + "," + 50 + ")")
+          .call(responsivefy);
+
+        data = data[root];
+        data.forEach(function(d) {
+          d.duration = d.duration;
+          d.value = +d.value;
+        });
+
+        data.sort(function(a, b) {
+          return a["duration"] - b["duration"];
+        });
+
+        // Scale the range of the data in the domains
+        x.domain(
+          data.map(function(d) {
+            return d.duration;
+          })
+        );
+        y.domain([
+          0,
+          d3.max(data, function(d) {
+            return d.value;
+          })
+        ]);
+
+        // append the rectangles for the bar chart
+        svg
+          .selectAll(".bar")
+          .data(data)
+          .enter()
+          .append("rect")
+          .attr("class", "bar")
+          .attr("x", function(d) {
+            return x(d.duration);
+          })
+          .attr("width", x.bandwidth())
+          .attr("y", function(d) {
+            return y(d.value);
+          })
+          .attr("height", function(d) {
+            return height - y(d.value);
+          });
+
+        // add the x Axis
+        svg
+          .append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+
+        // add the y Axis
+        svg.append("g").call(d3.axisLeft(y));
+
+        if (root == "durations") {
+          svg
+            .append("text")
+            .text("Tous : Durations")
+            .attr("y", 20)
+            .attr("x", 80)
+            .attr("font-size", 14)
+            .attr("font-family", "Consolas");
+        } else {
+          svg
+            .append("text")
+            .text(root + " : Durations")
+            .attr("y", 20)
+            .attr("x", 80)
+            .attr("font-size", 14)
+            .attr("font-family", "Consolas");
+        }
+      }
+
+      var data = { country: "None" };
+      drawCountry(data, "None");
+      drawPieChart(data, "None");
+
+      d3.json(
+        "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_date_all.json",
+        function(error, data) {
+          if (error) throw error;
+
+          // trigger render
+          drawLine(data, "dates");
+        }
+      );
+
+      d3.json(
+        "https://raw.githubusercontent.com/ruiyang123/giao.netflix.github.io/master/data_duration_all.json",
+        function(error, data) {
+          if (error) throw error;
+
+          // trigger render
+          drawBar(data, "durations");
+        }
+      );
+
+      //RESPONSIVEFY
+      function responsivefy(svg) {
+        // get container + svg aspect ratio
+        var container = d3.select(svg.node().parentNode),
+          width = parseInt(svg.style("width")),
+          height = parseInt(svg.style("height")),
+          aspect = width / height;
+
+        // add viewBox and preserveAspectRatio properties,
+        // and call resize so that svg resizes on inital page load
+        svg
+          .attr("viewBox", "0 0 " + width + " " + height)
+          .attr("perserveAspectRatio", "xMinYMid")
+          .call(resize);
+
+        // to register multiple listeners for same event type,
+        // you need to add namespace, i.e., 'click.foo'
+        // necessary if you call invoke this function for multiple svgs
+        // api docs: https://github.com/mbostock/d3/wiki/Selections#on
+        d3.select(window).on("resize." + container.attr("id"), resize);
+
+        // get width of container and resize svg to fit it
+        function resize() {
+          var targetWidth = parseInt(container.style("width"));
+          svg.attr("width", targetWidth);
+          svg.attr("height", Math.round(targetWidth / aspect));
+        }
+      }
+    </script>
+  </body>
 </html>
