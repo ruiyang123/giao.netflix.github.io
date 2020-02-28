@@ -25,30 +25,35 @@ There are 5 figures in total including a geomap, a stacked bar chart, a pie char
 In this figure, we can observe four parts : the geographical map which is colored by the number of TV show and Movies, a legend which shows the color intensity,the left text shows the interval and finally you can find a text in the top which represent the type of the filter. At first, we use no filter. So the number here is the total number of TV shows and movies. If we use a filter for example "TV-14", we will only consider the movies and TV shows satisfies the filter "TV-14". The legend and text will adapt with the filter.
 
 There exist an interaction with the rest 4 plots that means you can move your mouse to a country and click it to add a filter to the rest 4 plots. The rest 4 plots will only consider the data of the country clicked.
+<br/>
 
 ![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/f.PNG)
 
-### 3.2 stacked bar plot
+### 3.2 Stacked Bar Plot
 
 This graph shows the distribution of the number TV shows and Movies in diffrent PG(parental guideline) grouped by the Year.
 And there exist an interaction with the GeoMap that means you can move your mouse to a category and click it to add a filter to the **GeoMap**
-![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/figure2.PNG)
+<br/>
+![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/stacked_bar.PNG)
 
-### 3.3 pie chart
+### 3.3 Radio Pie Chart
 
 This graph shows the proportion of different types(children, horrible,international movies) of movies.
-![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/figure3.PNG)
+And there exist an interaction with the GeoMap that means you can move your mouse to a category and click it to add a filter to the 
+<br/>
+![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/radio_pie.PNG)
 
-### 3.4 bar chart
+### 3.4 Bar Chart
 
 This graph shows the number of Movies according to their periods in minutes.
-![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/figure3.PNG)
+<br/>
+![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/bar.PNG)
 
-### 3.5 line chart
+### 3.5 Line Chart
 
 This graph shows the number of movies and TV shows added to Netflix each year since 2008, as you can see the graph is made up of two curves, one for Movies and the other for TV shows, you can show or hide the curve by clicking on the corresponding label at the top of the page.
-
-![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/figure3.PNG)
+<br/>
+![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/line.PNG)
 
 
 
