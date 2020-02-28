@@ -69,7 +69,7 @@ This graph shows the number of movies and TV shows added to Netflix each year si
 
 ## 4. References
 
-- Web site to our project : https://ruiyang123.github.io/giao.netflix.github.io/
+- Web site to our project : https://safe-wave-04163.herokuapp.com/index.html
 - DataSet used : https://www.kaggle.com/shivamb/netflix-shows
 - Data Visulization Course ( par M. Romain VUILLEMOT ) : https://github.com/LyonDataViz/MOS5.5-Dataviz
 - Flixable :  https://fr.flixable.com/
