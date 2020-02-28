@@ -11,7 +11,7 @@
 The aim of this project is to make some visualisations based on a dataset which consists 
 of films and TV shows which have been available on Netflix since 2008.
 
-We found the dataset from **[Kaggle](https://www.kaggle.com/shivamb/netflix-shows)**. The dataset is not official. It is collected by a search engine named **[FLixable](https://fr.flixable.com/)**.
+We found the dataset from **[Kaggle](https://www.kaggle.com/shivamb/netflix-shows)**. It is collected by a search engine named **[FLixable](https://fr.flixable.com/)**.
  
 In this project, we can observe the distribution of TV shows and movies in different country. 
 There are 5 figures in total including a geomap, a stacked bar chart, a pie char, a bar char and a line char.
