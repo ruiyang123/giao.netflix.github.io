@@ -6373,6 +6373,14 @@ html .ql-toolbar .ql-picker .ql-picker-options {
   min-height: 100vh;
 }
 
+.navbar {
+  -webkit-box-shadow: 0 8px 6px -6px #999;
+  -moz-box-shadow: 0 8px 6px -6px #999;
+  box-shadow: 0 8px 6px -6px #999;
+
+  /* the rest of your styling */
+}
+
 .bg-cover {
   background-size: cover !important;
   /* background: url("https://static1.squarespace.com/static/5b21616f5cfd79b8b435e337/t/5c819c9dec212d0566179b7a/1551998122868/netflix.png?format=1500w")
@@ -6439,25 +6447,56 @@ svg {
 
 .col1 {
   flex: 1;
-}
+}*/
 
-.col2 {
-  flex: 1;
+/* .col2 {
+  height: 600px;
 } */
 
 #my-child {
-  position: absolute;
-  top: 30%;
-  left: 30%;
+  /* position: absolute; */
+  /* top: 0%;
+  left: 10%;
+  right: 5%; */
+  /* bottom: 5%; */
+  /* -ms-transform: translate(-20%, -100%);
+  transform: translate(-20%, -20%); */
+}
+
+.p1 {
+  top: 5%;
+  left: 10%;
   right: 5%;
-  bottom: 5%;
-  -ms-transform: translate(-20%, -100%);
-  transform: translate(-20%, -20%);
+}
+.p2 {
+  position: absolute;
+  top: 25%;
+  left: 10%;
+  right: 5%;
+  /* bottom: 5%; */
+}
+.p3 {
+  position: absolute;
+  top: 45%;
+  left: 10%;
+  right: 5%;
+}
+.p4 {
+  position: absolute;
+  top: 65%;
+  left: 10%;
+  right: 5%;
+}
+.p5 {
+  position: absolute;
+  top: 85%;
+  left: 10%;
+  right: 5%;
 }
 
 #my-parent {
   position: relative;
-  height: 300px;
+  height: 100%;
 }
 
 .arc text {
@@ -6477,13 +6516,105 @@ svg {
   fill: brown;
 }
 
-.axis {
-  font: 10px sans-serif;
+/* CSS goes here. */
+.subunit {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1px;
+}
+text.subunit-label {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  text-anchor: middle;
+  fill: #000;
+}
+.subunit-label {
+  display: none;
+}
+.graticule {
+  fill: none;
+  stroke: #aaa;
+  stroke-opacity: 0.5;
+  stroke-width: 0.5px;
 }
 
-.axis path,
-.axis line {
-  fill: none;
+.hover {
+  fill: var(--yellow);
+}
+
+.hoverMyLegend {
+  fill: red;
+  font-weight: bold;
+}
+
+.selected {
+  stroke: #fff;
+  fill: orange;
+}
+
+#regName {
+  position: absolute;
+  top: 150px;
+  height: 22px;
+  width: 250px;
+  padding: 3px;
+  text-align: center;
+}
+
+#legend {
+  border: 1px solid silver;
+  border-top: 0;
+}
+
+.legend-key path {
+  display: none;
+}
+
+.legend-key text {
+  font-size: 1rem;
+}
+
+.legend-key line {
   stroke: #000;
   shape-rendering: crispEdges;
+}
+
+#tooltip_map {
+  position: absolute;
+  text-align: center;
+  width: 120px;
+  height: 40px;
+  padding: 2px;
+  font: 13px sans-serif;
+  background: dimgrey;
+  border: 2px;
+  border-radius: 8px;
+  pointer-events: none;
+  color: bisque;
+  font-size: 10px;
+}
+
+#tooltip_stack_bar {
+  position: absolute;
+  text-align: center;
+  width: 70px;
+  height: 40px;
+  padding: 2px;
+  font: 13px sans-serif;
+  background: dimgrey;
+  border: 2px;
+  border-radius: 8px;
+  pointer-events: none;
+  color: white;
+  font-size: 10px;
+}
+
+b {
+  color: black;
+  font-weight: 500;
+}
+
+.top-card {
+  background-color: rgba(245, 245, 245, 1);
 }
