@@ -38,7 +38,7 @@ And there exist an interaction with the GeoMap that means you can move your mous
 
 ![avatar](https://github.com/ruiyang123/giao.netflix.github.io/blob/master/screenShots/stacked_bar.PNG)
 
-### 3.3 Radio Pie Chart
+### 3.3 Radial Pie Chart
 
 This graph shows the proportion of different types(children, horrible,international movies) of movies.
 And there exist an interaction with the GeoMap that means you can move your mouse to a category and click it to add a filter to the 
